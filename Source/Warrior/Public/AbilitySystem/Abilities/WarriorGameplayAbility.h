@@ -7,7 +7,7 @@
 #include "WarriorGameplayAbility.generated.h"
 
 UENUM(BlueprintType)
-enum class EWarriorAbilityActivatePolicy : uint8
+enum class EWarriorAbilityActivationPolicy : uint8
 {
 	OnTriggered,
 	OnGiven
@@ -25,8 +25,8 @@ protected:
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
-	//~ End UGameplayAbility Interface
+	//~ End UGameplayAbility Interface 
 	
 	UPROPERTY(EditDefaultsOnly,Category="WarriorAbility")
-	EWarriorAbilityActivatePolicy AbilityActivatePolicy = EWarriorAbilityActivatePolicy::OnTriggered;
+	EWarriorAbilityActivationPolicy AbilityActivationPolicy = EWarriorAbilityActivationPolicy::OnTriggered;
 };

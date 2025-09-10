@@ -16,6 +16,6 @@ AWarriorWeaponBase::AWarriorWeaponBase()
 	WeaponCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponCollisionBox"));
 	WeaponCollisionBox->SetupAttachment(GetRootComponent());
 	WeaponCollisionBox->SetBoxExtent(FVector(20.f));
-	WeaponCollisionBox->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+	WeaponCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 

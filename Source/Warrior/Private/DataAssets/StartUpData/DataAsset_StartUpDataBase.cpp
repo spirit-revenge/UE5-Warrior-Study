@@ -2,11 +2,14 @@
 
 
 #include "DataAssets/StartUpData/DataAsset_StartUpDataBase.h"
+
+#include "WarriorDebugHelper.h"
 #include "AbilitySystem/WarriorAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/WarriorGameplayAbility.h"
+#include "HAL/Platform.h"
 
 void UDataAsset_StartUpDataBase::GiveToAbilitySystemComponent(UWarriorAbilitySystemComponent* InASCToGive,
-	int32 ApplyLevel)
+                                                              int32 ApplyLevel)
 {
 	check(InASCToGive);
 
