@@ -7,7 +7,7 @@
 #include "WarriorAttributeSet.generated.h"
 
 /*
- * 
+ * 角色属性设定
  */
 UCLASS()
 class WARRIOR_API UWarriorAttributeSet : public UAttributeSet

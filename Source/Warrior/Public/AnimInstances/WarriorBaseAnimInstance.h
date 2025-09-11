@@ -7,7 +7,7 @@
 #include "WarriorBaseAnimInstance.generated.h"
 
 /**
- * 
+ * 基础的 动画实例类
  */
 UCLASS()
 class WARRIOR_API UWarriorBaseAnimInstance : public UAnimInstance

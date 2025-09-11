@@ -7,23 +7,32 @@
 
 void UWarriorCharacterAnimInstance::NativeInitializeAnimation()
 {
+	//UAnimInstance 自带函数，返回当前动画实例绑定的 Pawn。在动画蓝图第一次运行时调用，通常角色刚生成、SkeletalMesh 绑定动画蓝图时触发
+	//Cast<AWarriorBaseCharacter>(TryGetPawnOwner())把 Pawn 转成基类 AWarriorBaseCharacter
 	OwningCharacter = Cast<AWarriorBaseCharacter>(TryGetPawnOwner());
 
+	//如果该对象存在
 	if (OwningCharacter)
 	{
+		//缓存角色的移动组件，后续每帧可以直接用它来读取速度、加速度，而不用每次都去
 		OwningMovementComponent = OwningCharacter->GetCharacterMovement();
 	}
 }
 
 void UWarriorCharacterAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaSeconds)
 {
+	//防止角色不存在时访问无效内存，保证安全
 	if (!OwningCharacter || !OwningMovementComponent)
 	{
 		return;
 	}
 
+	//GetVelocity（）得到当前的速度向量
+	//Size2D，忽略垂直方向
 	GroundSpeed = OwningCharacter->GetVelocity().Size2D();
-
-	//此处节省了一次平方运算
+	
+	//GetCurrentAcceleration() 返回角色当前的加速度向量
+	//SizeSquared2D() 返回加速度平方长度，效率比 Size2D() 高（避免开方运算）
+	//判断是否大于 0，如果大于 0，说明玩家正在输入移动方向（有加速度）
 	bHasAcceleration = OwningMovementComponent->GetCurrentAcceleration().SizeSquared2D()>0.f;
 }

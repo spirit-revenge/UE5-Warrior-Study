@@ -4,6 +4,9 @@
 
 #include "NativeGameplayTags.h"
 
+/*
+ * Warrior项目的标签
+ */
 namespace WarriorGameplayTags
 {
 	/** Input Tags **/

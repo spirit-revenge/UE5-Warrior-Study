@@ -19,6 +19,8 @@ AWarriorBaseCharacter::AWarriorBaseCharacter()
 	WarriorAttributeSet = CreateDefaultSubobject<UWarriorAttributeSet>(TEXT("WarriorAttributeSet"));
 }
 
+//GAS 系统需要通过角色拿到它的 AbilitySystemComponent，就会调用这个函数。
+//实际返回的是我们自定义的 UWarriorAbilitySystemComponent
 UAbilitySystemComponent* AWarriorBaseCharacter::GetAbilitySystemComponent() const
 {
 	return GetWarriorAbilitySystemComponent();
@@ -26,15 +28,22 @@ UAbilitySystemComponent* AWarriorBaseCharacter::GetAbilitySystemComponent() cons
 
 void AWarriorBaseCharacter::PossessedBy(AController* NewController)
 {
+	//先执行 ACharacter 的默认行为
 	Super::PossessedBy(NewController);
 
+	//防止空指针
 	if (WarriorAbilitySystemComponent)
 	{
+		//非常关键的一步，必须调用，否则 GAS 不知道这个组件的拥有者和 Avatar
 		WarriorAbilitySystemComponent->InitAbilityActorInfo(this,this);
 
 		//以下两种都可选择
 		//ensure(!CharacterStartUpData.IsNull());
 		//if (ensure(!CharacterStartUpData.IsNull())){}
+
+		
+		//如果没有给角色分配 CharacterStartUpData，会在日志里输出警告。
+		//方便开发者发现忘记配置 Startup Data 的问题
 		ensureMsgf(!CharacterStartUpData.IsNull(),TEXT("Forgot to assign start up data to %s"),*GetName());
 
 		

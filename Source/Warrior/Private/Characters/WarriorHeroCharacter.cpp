@@ -61,12 +61,16 @@ AWarriorHeroCharacter::AWarriorHeroCharacter()
 
 void AWarriorHeroCharacter::PossessedBy(AController* NewController)
 {
+	//调用父类
 	Super::PossessedBy(NewController);
 
+	//如果角色的初始数据不为空
 	if (!CharacterStartUpData.IsNull())
 	{
+		//软引用，运行时同步加载
 		if(UDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.LoadSynchronous())
 		{
+			//GiveToAbilitySystemComponent() 会把该角色需要的初始技能、被动 Buff、属性应用到 AbilitySystemComponent 中。
 			LoadedData->GiveToAbilitySystemComponent(WarriorAbilitySystemComponent);
 		}
 	}
@@ -83,60 +87,84 @@ void AWarriorHeroCharacter::PossessedBy(AController* NewController)
 	*/
 }
 
+//游戏开始时调用
 void AWarriorHeroCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
+//游戏开始时调用
 void AWarriorHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	//检测存放输入配置的 DataAsset是否存在
 	checkf(InputConfigDataAsset,TEXT("Forgot to assign a valid data asset as input config"));
-	
+
+	// 获取本地玩家和 EnhancedInput 系统
 	ULocalPlayer* LocalPlayer= GetController<APlayerController>()->GetLocalPlayer();
-	
+
+	//Enhanced Input 插件的子系统，负责管理输入映射
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
 
+	//保证 Enhanced Input 系统存在，否则游戏直接崩溃报错
 	check(Subsystem);
 
+	//注册默认的输入映射表（Mapping Context）
+	//优先级设置为 0，意味着这是基础映射，可以叠加其他输入配置（比如 UI 交互模式）
 	Subsystem->AddMappingContext(InputConfigDataAsset->DefaultMappingContext,0);
 
+	//把引擎默认的 UInputComponent 转换为你自定义的 UWarriorInputComponent
+	//CastChecked 如果转换失败直接崩溃，保证组件一定是我们期望的类型
 	UWarriorInputComponent* WarriorInputComponent = CastChecked<UWarriorInputComponent>(PlayerInputComponent);
 
+	//绑定输入动作
 	WarriorInputComponent->BindNativeInputAction(InputConfigDataAsset,WarriorGameplayTags::InputTags_Move,ETriggerEvent::Triggered,this,&ThisClass::Input_Move);
 	WarriorInputComponent->BindNativeInputAction(InputConfigDataAsset,WarriorGameplayTags::InputTags_Look,ETriggerEvent::Triggered,this,&ThisClass::Input_Look);
 }
 
-void AWarriorHeroCharacter::Input_Move(const FInputActionValue& InputActionValue)
+//
+void AWarriorHeroCharacter::Input_Move(const FInputActionValue& InputActionValue) //InputActionValue 是 Enhanced Input 系统传来的值，包含了玩家输入的强度
 {
+	// 从输入事件中取出二维向量
 	const FVector2D MovementVector = InputActionValue.Get<FVector2D>();
+	// 获取控制器当前朝向，只取 Yaw（水平旋转），忽略 Pitch/Roll
 	const FRotator MovementRotator(0.f,Controller->GetControlRotation().Yaw,0.f);
 
+	// 如果Y轴方向移动不为0
 	if (MovementVector.Y != 0.f)
 	{
+		// 计算角色前方的世界方向
+		//FVector::ForwardVector 是 (X=1,Y=0,Z=0)，表示世界坐标系的前方。
+		//RotateVector 根据相机朝向旋转，得到相机前方。
 		const FVector ForwardDirection = MovementRotator.RotateVector(FVector::ForwardVector);
-		UE_LOG(LogTemp,Warning,TEXT("XX"));
+		//UE_LOG(LogTemp,Warning,TEXT("XX"));
+		//AddMovementInput 通知 CharacterMovementComponent 进行加速度更新
 		AddMovementInput(ForwardDirection,MovementVector.Y);
 	}
 
+	// 如果X轴方向移动不为0
 	if (MovementVector.X != 0.f)
 	{
+		//FVector::RightVector 是 (X=0,Y=1,Z=0)，表示世界坐标系的右方。
+		//同理，通过旋转得到相机右方，再添加移动输入
 		const FVector RightDirection = MovementRotator.RotateVector(FVector::RightVector);
-		
 		AddMovementInput(RightDirection,MovementVector.X);
 	}
 }
 
 void AWarriorHeroCharacter::Input_Look(const FInputActionValue& InputActionValue)
 {
+	// 获取鼠标/摇杆的视角变化量
 	const FVector2D LookAxisVector =  InputActionValue.Get<FVector2D>();
 
 	if (LookAxisVector.X != 0.f)
 	{
+		// 控制水平旋转（左右看）
 		AddControllerYawInput(LookAxisVector.X);
 	}
 
 	if (LookAxisVector.Y != 0.f)
 	{
+		//// 控制垂直旋转（抬头/低头）
 		//此处可设置为负值，即Y轴反转，更符合操作习惯
 		AddControllerPitchInput(LookAxisVector.Y);
 	}

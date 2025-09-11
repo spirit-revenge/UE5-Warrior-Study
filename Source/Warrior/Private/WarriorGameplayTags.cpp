@@ -3,6 +3,9 @@
 
 #include "WarriorGameplayTags.h"
 
+/*
+ * 定义GameplayTags
+ */
 namespace WarriorGameplayTags
 {
 	/** Input Tags **/
