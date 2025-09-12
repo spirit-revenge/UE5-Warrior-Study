@@ -20,7 +20,9 @@ public:
 	//提供一个模板函数 BindNativeInputAction，用来 绑定输入行为（Input Action）和 C++ 回调函数
 	template<class UserObject,typename CallbackFunc>
 	void BindNativeInputAction(const UDataAsset_InputConfig* InInputConfig,const FGameplayTag&  InInputTag,ETriggerEvent TriggerEvent,UserObject* ContextObject,CallbackFunc Func);
-	
+
+	template<class UserObject,typename CallbackFunc>
+	void BindAbilityInputAction(const UDataAsset_InputConfig* InInputConfig,UserObject* ContextObject,CallbackFunc InputPressedFunc,CallbackFunc InputReleasedFunc);
 };
 
 template <class UserObject, typename CallbackFunc>
@@ -42,5 +44,20 @@ void UWarriorInputComponent::BindNativeInputAction(const UDataAsset_InputConfig*
 		* Func 是要调用的函数，比如 &ThisClass::Input_Move。
 		 */
 		BindAction(FoundAction,TriggerEvent,ContextObject,Func);
+	}
+}
+
+template <class UserObject, typename CallbackFunc>
+void UWarriorInputComponent::BindAbilityInputAction(const UDataAsset_InputConfig* InInputConfig,
+	UserObject* ContextObject, CallbackFunc InputPressedFunc, CallbackFunc InputReleasedFunc)
+{
+	checkf(InInputConfig,TEXT("Input config data asset is null,can not proceed with binding"));
+
+	for (const FWarriorInputActionConfig AbilityInputActionConfig : InInputConfig->AbilityInputActions)
+	{
+		if (!AbilityInputActionConfig.IsValid()) continue;
+
+		BindAction(AbilityInputActionConfig.InputAction,ETriggerEvent::Started,ContextObject,InputPressedFunc,AbilityInputActionConfig.InputTag);
+		BindAction(AbilityInputActionConfig.InputAction,ETriggerEvent::Completed,ContextObject,InputReleasedFunc,AbilityInputActionConfig.InputTag);
 	}
 }

@@ -34,6 +34,11 @@ public:
 	 */
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	UInputAction* InputAction;
+
+	bool IsValid() const
+	{
+		return InputTag.IsValid() && InputAction;
+	}
 };
 /**
  * 数据资产类，用来集中管理输入配置
@@ -55,4 +60,7 @@ public:
 
 	//用来通过 InputTag 查找对应的 InputAction
 	UInputAction* FindNativeInputActionByTag(const FGameplayTag& InInputTag) const;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,meta=(TitleProperty = "InputAction"))
+	TArray<FWarriorInputActionConfig> AbilityInputActions;
 };
