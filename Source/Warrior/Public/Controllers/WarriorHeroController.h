@@ -7,7 +7,7 @@
 #include "WarriorHeroController.generated.h"
 
 /**
- * 
+ * 玩家控制器类，用于接收输入、驱动角色、管理 HUD 等
  */
 UCLASS()
 class WARRIOR_API AWarriorHeroController : public APlayerController

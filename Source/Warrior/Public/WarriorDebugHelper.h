@@ -1,6 +1,7 @@
 // Spirit Revenge All Rights Reserved
 #pragma once
 
+//用于项目DEBUG输出
 namespace Debug
 {
 	static void Print(const FString& Msg,const FColor& Color = FColor::MakeRandomColor(),int32 InKey = -1)

@@ -7,7 +7,7 @@
 #include "WarriorHeroWeapon.generated.h"
 
 /**
- * 
+ * hero专用的武器类
  */
 UCLASS()
 class WARRIOR_API AWarriorHeroWeapon : public AWarriorWeaponBase
