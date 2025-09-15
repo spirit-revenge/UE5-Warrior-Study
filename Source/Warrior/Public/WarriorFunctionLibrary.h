@@ -33,7 +33,7 @@ public:
 
 	//检查 Actor 是否已经有该 GameplayTag。如果没有，则添加
 	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")
-	static void AddGameplayTagToActorIfNane(AActor* InActor, FGameplayTag TagToAdd);
+	static void AddGameplayTagToActorIfNone(AActor* InActor, FGameplayTag TagToAdd);
 
 	//如果 Actor 身上有这个 Tag，就移除它
 	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")

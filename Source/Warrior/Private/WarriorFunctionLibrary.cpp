@@ -15,7 +15,7 @@ UWarriorAbilitySystemComponent* UWarriorFunctionLibrary::NativeGetWarriorASCFrom
 	return CastChecked<UWarriorAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActor));
 }
 
-void UWarriorFunctionLibrary::AddGameplayTagToActorIfNane(AActor* InActor, FGameplayTag TagToAdd)
+void UWarriorFunctionLibrary::AddGameplayTagToActorIfNone(AActor* InActor, FGameplayTag TagToAdd)
 {
 	//获取Actor伤的AbilitySystemComponent
 	UWarriorAbilitySystemComponent* ASC = NativeGetWarriorASCFromActor(InActor);
