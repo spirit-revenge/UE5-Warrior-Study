@@ -61,5 +61,7 @@ public:
 	//内联函数，提供快速访问。蓝图和 C++ 都能直接调用，性能比普通函数更高
 	FORCEINLINE UWarriorAbilitySystemComponent* GetWarriorAbilitySystemComponent() const {return WarriorAbilitySystemComponent;}
 
+	//内联函数
+	//UWarriorAttributeSet 是 GAS 的 AttributeSet，用来存储角色的数值属性
 	FORCEINLINE UWarriorAttributeSet* GetWarriorAttributeSet() const {return WarriorAttributeSet;}
 };

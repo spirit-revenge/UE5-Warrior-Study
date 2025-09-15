@@ -173,6 +173,7 @@ void AWarriorHeroCharacter::Input_Look(const FInputActionValue& InputActionValue
 
 void AWarriorHeroCharacter::Input_AbilityInputPressed(FGameplayTag InInputTag)
 {
+	//触发输入
 	WarriorAbilitySystemComponent->OnAbilityInputPressed( InInputTag );
 }
 

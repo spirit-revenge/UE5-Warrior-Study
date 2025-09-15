@@ -68,7 +68,9 @@ private:
 	void Input_Move(const FInputActionValue& InputActionValue);
 	//镜头移动输入
 	void Input_Look(const FInputActionValue& InputActionValue);
+	//按键按下输入
 	void Input_AbilityInputPressed(FGameplayTag InInputTag);
+	//按键释放输入
 	void Input_AbilityInputReleased(FGameplayTag InInputTag);
 	
 #pragma endregion

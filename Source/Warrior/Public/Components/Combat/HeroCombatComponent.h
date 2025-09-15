@@ -18,6 +18,9 @@ class WARRIOR_API UHeroCombatComponent : public UPawnCombatComponent
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Warrior|Combat")
+	//获取武器实例，返回一个武器类的实例（AWarriorHeroWeapon）。
+	//参数 FGameplayTag InWeaponTag：表示要查找哪种武器
+	//当一个角色有不同武器时，就可以调用进行管理
 	AWarriorHeroWeapon* GetHeroCarriedWeaponByTag(FGameplayTag InWeaponTag) const;
 	
 };
