@@ -23,8 +23,8 @@ void UPawnCombatComponent::RegisterSpawnWeapon(FGameplayTag InWeaponTagToRegiste
 	}
 
 	// 打印调试信息，方便在输出日志里看到是哪把武器被注册了
-	const FString WeaponString = FString::Printf(TEXT("A weapon named: %s has been registered using  hte tag %s"),*InWeaponToRegister->GetName(),*InWeaponTagToRegister.ToString());
-	Debug::Print(WeaponString);
+	// const FString WeaponString = FString::Printf(TEXT("A weapon named: %s has been registered using  hte tag %s"),*InWeaponToRegister->GetName(),*InWeaponTagToRegister.ToString());
+	// Debug::Print(WeaponString);
 }
 
 //通过 GameplayTag 查询角色是否持有指定武器。如果有，返回那把武器的指针。如果没有，返回 nullptr
