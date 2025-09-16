@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "Interfaces/PawnCombatInterface.h"
+
 #include "WarriorBaseCharacter.generated.h"
 
 class UWarriorAbilitySystemComponent;
@@ -21,7 +23,7 @@ class UDataAsset_StartUpDataBase;
  *		实现后，GAS 系统可以通过这个角色获取它的 AbilitySystemComponent
  */
 UCLASS()
-class WARRIOR_API AWarriorBaseCharacter : public ACharacter,public IAbilitySystemInterface
+class WARRIOR_API AWarriorBaseCharacter : public ACharacter,public IAbilitySystemInterface, public IPawnCombatInterface
 {
 	GENERATED_BODY()
 
@@ -33,6 +35,10 @@ public:
 	//实现 IAbilitySystemInterface 的纯虚函数。 GAS 系统调用这个函数，获取角色的 AbilitySystemComponent
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	//~ End IAbilitySystemInterface Interface
+
+	//~ Begin IPawnCombatInterface Interface.
+	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
+	//~ End IPawnCombatInterface Interface
 protected:
 	//~ Begin APawn Interface.
 	/*

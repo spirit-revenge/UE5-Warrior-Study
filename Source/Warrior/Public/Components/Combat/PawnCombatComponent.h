@@ -10,6 +10,14 @@
 
 class AWarriorWeaponBase;
 
+UENUM(BlueprintType)
+enum class EToggleDamageType : uint8
+{
+	CurrentEquippedWeapon,
+	LeftHand,
+	RightHand,
+};
+
 /**
  * 管理这个 Pawn（角色）拥有的武器
  */
@@ -39,6 +47,9 @@ public:
 	//返回当前装备的武器实例
 	UFUNCTION(BlueprintCallable, Category = "Warrior|Combat")
 	AWarriorWeaponBase* GetCharacterCurrentEquippedWeapon() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Warrior|Combat")
+	void ToggleWeaponCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType = EToggleDamageType::CurrentEquippedWeapon);
 private:
 	//用来存储角色身上携带的所有武器。key 是 GameplayTag。value 是具体的武器对象指针。
 	TMap<FGameplayTag,AWarriorWeaponBase* > CharacterCarriedWeaponMap;

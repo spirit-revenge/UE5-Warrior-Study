@@ -4,17 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "WarriorTypes/WarriorEnumTypes.h"
 #include "WarriorFunctionLibrary.generated.h"
 
 class UWarriorAbilitySystemComponent;
+class UPawnCombatComponent;
 
-//它被用作 蓝图的 Exec 输出引脚（通过 ExpandEnumAsExecs），这样可以在蓝图中直接用类似 Branch 的分支执行流，而不是返回一个 bool。
-UENUM()
-enum class EWarriorConfirmType : uint8
-{
-	Yes,
-	No
-};
 /**
  * 自定义的 蓝图函数库 UWarriorFunctionLibrary，让 GAS 和 GameplayTag 的操作更方便地在蓝图中使用
  * 继承自 UBlueprintFunctionLibrary，这意味着：
@@ -53,4 +48,9 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary",meta=(DisplayName = "Does Actor Have Tag", ExpandEnumAsExecs = "OutConfirmType"))
 	static void BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck,EWarriorConfirmType& OutConfirmType);
+
+	static UPawnCombatComponent* NativeGetPawnCombatComponentFromActor(AActor* InActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary",meta=(DisplayName = "Get Pawn Combat Component From Actor", ExpandEnumAsExecs = "OutValidType"))
+	static UPawnCombatComponent* BP_GetPawnCombatComponentFromActor(AActor* InActor,EWarriorValidType& OutValidType);
 };

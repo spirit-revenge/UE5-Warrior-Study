@@ -26,6 +26,11 @@ UAbilitySystemComponent* AWarriorBaseCharacter::GetAbilitySystemComponent() cons
 	return GetWarriorAbilitySystemComponent();
 }
 
+UPawnCombatComponent* AWarriorBaseCharacter::GetPawnCombatComponent() const
+{
+	return nullptr;
+}
+
 void AWarriorBaseCharacter::PossessedBy(AController* NewController)
 {
 	//先执行 ACharacter 的默认行为

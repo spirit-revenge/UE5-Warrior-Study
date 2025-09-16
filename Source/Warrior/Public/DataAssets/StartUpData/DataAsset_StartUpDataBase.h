@@ -8,7 +8,7 @@
 
 class UWarriorGameplayAbility;
 class UWarriorAbilitySystemComponent;
-
+class UGameplayEffect;
 /**
 * 继承自 UDataAsset：
 * UDataAsset 是 UE 的一种数据资源，主要用来存放配置数据（而不是行为逻辑）。
@@ -37,6 +37,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly,Category="StartUpData")
 	TArray<TSubclassOf<UWarriorGameplayAbility>> ReactiveAbilities;
 
+	UPROPERTY(EditDefaultsOnly,Category="StartUpData")
+	TArray<TSubclassOf<UGameplayEffect>> StartUpGameplayEffects;
+	
 	//实际授予能力的内部函数。
 	//遍历传入的技能数组，逐个授予到 AbilitySystemComponent。
 	void GrantAbilities(const TArray<TSubclassOf<UWarriorGameplayAbility>>& InAbilitiesToGive,UWarriorAbilitySystemComponent* InASCToGive,int32 ApplyLevel = 1);
