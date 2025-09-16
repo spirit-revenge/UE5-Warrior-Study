@@ -22,5 +22,7 @@ public:
 	//参数 FGameplayTag InWeaponTag：表示要查找哪种武器
 	//当一个角色有不同武器时，就可以调用进行管理
 	AWarriorHeroWeapon* GetHeroCarriedWeaponByTag(FGameplayTag InWeaponTag) const;
-	
+
+	virtual void OnHitTargetActor(AActor* HitActor) override;
+	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor) override;
 };

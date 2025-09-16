@@ -50,6 +50,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Warrior|Combat")
 	void ToggleWeaponCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType = EToggleDamageType::CurrentEquippedWeapon);
+
+	virtual void OnHitTargetActor(AActor* HitActor);
+	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor);
+
+protected:
+	TArray<AActor*> OverLappedActors;
+	
 private:
 	//用来存储角色身上携带的所有武器。key 是 GameplayTag。value 是具体的武器对象指针。
 	TMap<FGameplayTag,AWarriorWeaponBase* > CharacterCarriedWeaponMap;

@@ -13,10 +13,13 @@ void UPawnCombatComponent::RegisterSpawnWeapon(FGameplayTag InWeaponTagToRegiste
 	//检查，确保不会重复注册相同 Tag 的武器，否则直接报错（防止逻辑错误）
 	checkf(!CharacterCarriedWeaponMap.Contains(InWeaponTagToRegister),TEXT("A attack named %s has already been addedas carried weapon"), *InWeaponTagToRegister.ToString());
 	check(InWeaponToRegister);
-
+	
 	//确保传进来的武器不是 nullptr
 	CharacterCarriedWeaponMap.Emplace(InWeaponTagToRegister,InWeaponToRegister);
 
+	InWeaponToRegister->OnWeaponHitTarget.BindUObject(this,&ThisClass::OnHitTargetActor);
+	InWeaponToRegister->OnWeaponPulledFromTarget.BindUObject(this,&ThisClass::OnWeaponPulledFromTargetActor);
+	
 	// 如果要求注册的同时装备，就更新当前装备武器的 Tag
 	if (bRegisterAsEquippedWeapon)
 	{
@@ -65,13 +68,23 @@ void UPawnCombatComponent::ToggleWeaponCollision(bool bShouldEnable, EToggleDama
 		if (bShouldEnable)
 		{
 			WeaponToToggle->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-			Debug::Print(WeaponToToggle->GetName()+TEXT(" Collision Enabled"),FColor::Green);
+			//Debug::Print(WeaponToToggle->GetName()+TEXT(" Collision Enabled"),FColor::Green);
 		}
 		else
 		{
 			WeaponToToggle->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			Debug::Print(WeaponToToggle->GetName()+TEXT(" Collision Disabled"),FColor::Red);
+
+			OverLappedActors.Empty();
+			//Debug::Print(WeaponToToggle->GetName()+TEXT(" Collision Disabled"),FColor::Red);
 		}
-		
 	}
+	//TODO：Handle body collision boxes
+}
+
+void UPawnCombatComponent::OnHitTargetActor(AActor* HitActor)
+{
+}
+
+void UPawnCombatComponent::OnWeaponPulledFromTargetActor(AActor* InteractedActor)
+{
 }
