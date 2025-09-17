@@ -13,5 +13,17 @@ namespace Debug
 			UE_LOG(LogTemp,Warning,TEXT("%s"),*Msg);//将格式化消息记录到日志文件中的宏
 		}
 	}
+
+	static void Print(const FString& FloatTitle, float FloatValueToPrint, int32 InKey = -1, const FColor& Color = FColor::MakeRandomColor())
+	{
+		if (GEngine)
+		{
+			const FString FloatMsg = FloatTitle + TEXT(": ") + FString::SanitizeFloat(FloatValueToPrint);
+
+			GEngine->AddOnScreenDebugMessage(InKey,7.f,Color,FloatMsg);
+
+			UE_LOG(LogTemp,Warning,TEXT("%s"),*FloatMsg)
+		}
+	}
 }
  

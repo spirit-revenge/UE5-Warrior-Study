@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/WarriorGameplayAbility.h"
 #include "AbilitySystem/WarriorAbilitySystemComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 //这个函数会在 Ability 被授予（Granted） 时调用，比如角色学会了一个技能，或者通过装备/被动获得一个技能
 void UWarriorGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo,
@@ -58,4 +59,27 @@ UWarriorAbilitySystemComponent* UWarriorGameplayAbility::GetWarriorAbilitySystem
 	//AbilitySystemComponent -> UE 的核心组件，管理这个角色的所有 GameplayAbilities、GameplayEffects、Attributes。
 	//Cast<UWarriorAbilitySystemComponent>() -> 把基类指针转成你项目里自定义的 UWarriorAbilitySystemComponent，这样就可以访问你扩展的功能
 	return Cast<UWarriorAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent);
+}
+
+FActiveGameplayEffectHandle UWarriorGameplayAbility::NativeApplyEffectSpecHandleToTarget(AActor* TargetActor,
+	const FGameplayEffectSpecHandle& InSpecHandle)
+{
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+
+	check(TargetASC && InSpecHandle.IsValid());
+	
+	return GetWarriorAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(
+		*InSpecHandle.Data,
+		TargetASC
+	);
+}
+
+FActiveGameplayEffectHandle UWarriorGameplayAbility::BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor,
+	const FGameplayEffectSpecHandle& InSpecHandle, EWarriorSuccessType& OutSuccessType)
+{
+	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = NativeApplyEffectSpecHandleToTarget(TargetActor,InSpecHandle);
+
+	OutSuccessType = ActiveGameplayEffectHandle.WasSuccessfullyApplied() ? EWarriorSuccessType::Successful : EWarriorSuccessType::Failed;
+
+	return ActiveGameplayEffectHandle;
 }
