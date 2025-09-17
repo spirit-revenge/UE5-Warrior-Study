@@ -28,6 +28,9 @@ public:
 	//直接访问角色的战斗功能，比如技能连招、专属攻击
 	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
 	UHeroCombatComponent* GetHeroCombatComponentFromActorInfo();
+
+	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
+	FGameplayEffectSpecHandle MakeHeroDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float InWeaponBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount);
 private:
 	//弱引用指针（TWeakObjectPtr），缓存角色和控制器
 	//通常在 GetHeroCharacterFromActorInfo() 里先检查缓存，如果没有就从 ActorInfo 里取一次并保存，减少重复查找，提高性能
