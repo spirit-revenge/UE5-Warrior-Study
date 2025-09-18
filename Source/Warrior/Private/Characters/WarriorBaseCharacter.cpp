@@ -14,8 +14,12 @@ AWarriorBaseCharacter::AWarriorBaseCharacter()
 
 	GetMesh()->bReceivesDecals = false;//禁止角色的 Mesh 接收贴花效果（比如血迹、弹孔）
 
+	//为角色创建一个 UWarriorAbilitySystemComponent 子组件
+	//CreateDefaultSubobject 在构造函数中创建子对象/子组件
+	//TEXT("WarriorAbilitySystemComponent") → 子组件名字，可在编辑器或蓝图中看到
 	WarriorAbilitySystemComponent = CreateDefaultSubobject<UWarriorAbilitySystemComponent>(TEXT("WarriorAbilitySystemComponent"));
 
+	//为角色创建属性集（AttributeSet）子组件
 	WarriorAttributeSet = CreateDefaultSubobject<UWarriorAttributeSet>(TEXT("WarriorAttributeSet"));
 }
 

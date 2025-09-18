@@ -49,8 +49,11 @@ protected:
 	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
 	UWarriorAbilitySystemComponent* GetWarriorAbilitySystemComponentFromActorInfo() const;
 
+	//把 GAS 的“应用效果”过程集中封装，避免到处写重复代码。
 	FActiveGameplayEffectHandle NativeApplyEffectSpecHandleToTarget(AActor* TargetActor,const FGameplayEffectSpecHandle& InSpecHandle);
 
+	//BlueprintCallable 可以直接在蓝图里调用，输入目标 Actor 和 SpecHandle。
+	//ExpandEnumAsExecs = "OutSuccessType" 蓝图执行节点会变成两个分支
 	UFUNCTION(BlueprintCallable, Category = "Warrior|Ability" ,meta=(DisplayName = "Apply Gameplay Effect Spec Handle To Target Actor", ExpandEnumAsExecs = "OutSuccessType"))
 	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor,const FGameplayEffectSpecHandle& InSpecHandle,EWarriorSuccessType& OutSuccessType);
 };

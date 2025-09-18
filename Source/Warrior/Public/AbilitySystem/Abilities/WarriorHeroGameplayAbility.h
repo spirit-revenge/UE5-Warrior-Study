@@ -29,6 +29,10 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
 	UHeroCombatComponent* GetHeroCombatComponentFromActorInfo();
 
+	//TSubclassOf<UGameplayEffect> EffectClass  表示要使用的 GameplayEffect 类，用 TSubclassOf 限制只能传入 UGameplayEffect 的派生类，避免错误。
+	//float InWeaponBaseDamage 武器基础伤害，通常用来动态设置 GameplayEffect 的 SetByCaller 数值
+	//FGameplayTag InCurrentAttackTypeTag 当前攻击类型
+	//int32 InUsedComboCount 当前使用的连击次数，可能用来叠加伤害倍数或者触发连击专属效果
 	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
 	FGameplayEffectSpecHandle MakeHeroDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float InWeaponBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount);
 private:

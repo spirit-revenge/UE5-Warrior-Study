@@ -4,6 +4,7 @@
 
 UWarriorAttributeSet::UWarriorAttributeSet()
 {
+	//初始化，防止空指针
 	InitCurrentHealth(1.f);
 	InitMaxHealth(1.f);
 	InitCurrentRage(1.f);

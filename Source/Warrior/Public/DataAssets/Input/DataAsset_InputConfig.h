@@ -61,6 +61,9 @@ public:
 	//用来通过 InputTag 查找对应的 InputAction
 	UInputAction* FindNativeInputActionByTag(const FGameplayTag& InInputTag) const;
 
+	//meta=(TitleProperty = "InputAction")
+	//编辑器显示效果：在 Details 面板的数组元素显示时，会用 FWarriorInputActionConfig 结构体中的 InputAction 字段作为标题。
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,meta=(TitleProperty = "InputAction"))
+	//角色或武器的输入动作配置数组
 	TArray<FWarriorInputActionConfig> AbilityInputActions;
 };

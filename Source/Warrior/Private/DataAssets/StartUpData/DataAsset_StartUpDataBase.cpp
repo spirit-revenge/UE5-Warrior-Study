@@ -15,20 +15,28 @@ void UDataAsset_StartUpDataBase::GiveToAbilitySystemComponent(UWarriorAbilitySys
 	check(InASCToGive);
 
 	//分别调用 GrantAbilities 授予
+	//ActivateOnGivenAbilities → 初始化时就激活的技能（比如基础攻击、冲刺）
 	GrantAbilities(ActivateOnGivenAbilities, InASCToGive, ApplyLevel);
+	//ReactiveAbilities → 被动或反应类技能（比如防御反击、回血）
 	GrantAbilities(ReactiveAbilities, InASCToGive, ApplyLevel);
+	//GrantAbilities → 内部函数，遍历数组，把每个技能实例化并通过 ASC 的 GiveAbility 赋予角色
 
+	//判断不为空
 	if (!StartUpGameplayEffects.IsEmpty())
 	{
+		//StartUpGameplayEffects 是 TArray<TSubclassOf<UGameplayEffect>>，存储角色初始效果
 		for (const TSubclassOf<UGameplayEffect>& EffectClass : StartUpGameplayEffects)
 		{
 			if (!EffectClass) continue;
 
+			//对每个有效的 EffectClass：
+			
+			//通过 GetDefaultObject<UGameplayEffect>() 获取 CDO（Class Default Object），这是 UE 给类实例化的默认对象。
 			UGameplayEffect* EffectCDO = EffectClass->GetDefaultObject<UGameplayEffect>();
-			InASCToGive->ApplyGameplayEffectToSelf(
+			InASCToGive->ApplyGameplayEffectToSelf(//调用 ApplyGameplayEffectToSelf 应用效果到自己。
 				EffectCDO,
-				ApplyLevel,
-				InASCToGive->MakeEffectContext()
+				ApplyLevel,//ApplyLevel → 可以根据角色等级调整效果强度。
+				InASCToGive->MakeEffectContext()//MakeEffectContext() → 创建效果上下文，包含来源 Actor、技能信息等。
 			);
 		}
 	}

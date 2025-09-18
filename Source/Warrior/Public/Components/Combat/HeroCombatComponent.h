@@ -22,13 +22,17 @@ public:
 	//参数 FGameplayTag InWeaponTag：表示要查找哪种武器
 	//当一个角色有不同武器时，就可以调用进行管理
 	AWarriorHeroWeapon* GetHeroCarriedWeaponByTag(FGameplayTag InWeaponTag) const;
-	
+
+	//获取当前手持武器实例
 	UFUNCTION(BlueprintCallable, Category = "Warrior|Combat")
 	AWarriorHeroWeapon* GetHeroCurrentEquippedWeapon() const;
 
+	//根据等级获取当前武器伤害
 	UFUNCTION(BlueprintCallable, Category = "Warrior|Combat")
 	float GetHeroCurrentEquippedWeaponDamageAtLevel(float InLevel) const;
-	
+
+	//武器击中事件的处理逻辑
 	virtual void OnHitTargetActor(AActor* HitActor) override;
+	//武器离开目标事件处理
 	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor) override;
 };

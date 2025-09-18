@@ -17,6 +17,10 @@ void UPawnCombatComponent::RegisterSpawnWeapon(FGameplayTag InWeaponTagToRegiste
 	//确保传进来的武器不是 nullptr
 	CharacterCarriedWeaponMap.Emplace(InWeaponTagToRegister,InWeaponToRegister);
 
+	//BindUObject 用于把委托绑定到 UObject 类的成员函数
+	//this → 当前战斗组件实例
+	//&ThisClass::OnHitTargetActor → 当委托触发时调用的函数
+	//绑定后，武器事件发生时会自动调用战斗组件的函数。
 	InWeaponToRegister->OnWeaponHitTarget.BindUObject(this,&ThisClass::OnHitTargetActor);
 	InWeaponToRegister->OnWeaponPulledFromTarget.BindUObject(this,&ThisClass::OnWeaponPulledFromTargetActor);
 	
@@ -59,21 +63,28 @@ AWarriorWeaponBase* UPawnCombatComponent::GetCharacterCurrentEquippedWeapon() co
 
 void UPawnCombatComponent::ToggleWeaponCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType)
 {
+	//只处理当前装备的武器碰撞
 	if (ToggleDamageType == EToggleDamageType::CurrentEquippedWeapon)
 	{
+		//	GetCharacterCurrentEquippedWeapon() → 获取角色当前装备的武器
 		AWarriorWeaponBase* WeaponToToggle = GetCharacterCurrentEquippedWeapon();
 
+		//check(WeaponToToggle) → 确保武器不为空，避免空指针崩溃
 		check(WeaponToToggle);
 
 		if (bShouldEnable)
 		{
+			//SetCollisionEnabled(ECollisionEnabled::QueryOnly)
+			//启用碰撞查询（Overlap），但不产生物理响应
+			//用于检测武器与目标的接触
 			WeaponToToggle->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 			//Debug::Print(WeaponToToggle->GetName()+TEXT(" Collision Enabled"),FColor::Green);
 		}
 		else
 		{
+			//SetCollisionEnabled(ECollisionEnabled::NoCollision) → 禁用碰撞
 			WeaponToToggle->GetWeaponCollisionBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
+			//OverLappedActors.Empty() → 清空已记录的碰撞目标，避免下一次攻击重复命中
 			OverLappedActors.Empty();
 			//Debug::Print(WeaponToToggle->GetName()+TEXT(" Collision Disabled"),FColor::Red);
 		}

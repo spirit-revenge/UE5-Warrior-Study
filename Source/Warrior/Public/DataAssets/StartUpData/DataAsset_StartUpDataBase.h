@@ -37,7 +37,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly,Category="StartUpData")
 	TArray<TSubclassOf<UWarriorGameplayAbility>> ReactiveAbilities;
 
+	//EditDefaultsOnly → 只能在类默认值面板（Class Defaults）中编辑，运行时实例不能修改
+	//TSubclassOf<UGameplayEffect>
+	//	表示 GameplayEffect 的类类型，而不是实例。
+	//	使用这种方式，你可以在编辑器中直接选择要使用的 GameplayEffect Blueprint 或 C++ 类。
+	//	在运行时通过 NewObject 或 MakeOutgoingSpec 创建实际实例。
 	UPROPERTY(EditDefaultsOnly,Category="StartUpData")
+	//StartUpGameplayEffects 一般用于 角色初始化时赋予默认效果
 	TArray<TSubclassOf<UGameplayEffect>> StartUpGameplayEffects;
 	
 	//实际授予能力的内部函数。

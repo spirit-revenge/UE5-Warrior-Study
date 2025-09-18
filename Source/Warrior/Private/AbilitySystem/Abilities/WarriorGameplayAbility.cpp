@@ -64,10 +64,15 @@ UWarriorAbilitySystemComponent* UWarriorGameplayAbility::GetWarriorAbilitySystem
 FActiveGameplayEffectHandle UWarriorGameplayAbility::NativeApplyEffectSpecHandleToTarget(AActor* TargetActor,
 	const FGameplayEffectSpecHandle& InSpecHandle)
 {
+	//用蓝图库安全获取目标 ASC，支持任何实现了 IAbilitySystemInterface 的 Actor。
 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 
+	//确保目标 ASC 和 SpecHandle 有效，开发时直接 Crash，方便调试。
 	check(TargetASC && InSpecHandle.IsValid());
-	
+
+	//用当前 Ability 的 Owner ASC 调用 ApplyGameplayEffectSpecToTarget，这是 GAS 推荐做法
+	//它会自动处理本地预测、RPC 调用
+	//正确设置 Instigator 和 EffectCauser，保证 GameplayEffect 的来源信息正确
 	return GetWarriorAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(
 		*InSpecHandle.Data,
 		TargetASC
@@ -77,9 +82,12 @@ FActiveGameplayEffectHandle UWarriorGameplayAbility::NativeApplyEffectSpecHandle
 FActiveGameplayEffectHandle UWarriorGameplayAbility::BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor,
 	const FGameplayEffectSpecHandle& InSpecHandle, EWarriorSuccessType& OutSuccessType)
 {
+	//调用 NativeApplyEffectSpecHandleToTarget，保证核心逻辑集中。
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = NativeApplyEffectSpecHandleToTarget(TargetActor,InSpecHandle);
 
+	//使用 WasSuccessfullyApplied() 检查应用是否成功，非常好，这是 GAS 官方推荐的检查方式。
 	OutSuccessType = ActiveGameplayEffectHandle.WasSuccessfullyApplied() ? EWarriorSuccessType::Successful : EWarriorSuccessType::Failed;
 
+	//返回句柄给蓝图，让蓝图有机会存储，后续可以用 RemoveActiveGameplayEffect 移除
 	return ActiveGameplayEffectHandle;
 }

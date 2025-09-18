@@ -34,15 +34,23 @@ AWarriorWeaponBase::AWarriorWeaponBase()
 void AWarriorWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	//GetInstigator<APawn>() 获取这个武器的拥有者（通常是角色）
 	APawn* WeaponOwingPawn = GetInstigator<APawn>();
-
+	
+	//checkf 确保拥有者存在，否则会触发断言并打印武器名称
 	checkf(WeaponOwingPawn,TEXT("Forgot to assign an instiagtor as the owning pawn for the weapon: %s"),*GetName());
 
+	//检查碰撞对象是否是 Pawn
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
+		//防止武器“击中自己”：
 		if (WeaponOwingPawn != HitPawn)
 		{
 			//Debug::Print(GetName() + TEXT("begin overlap with ") + HitPawn -> GetName(),FColor::Green);
+			
+			//调用委托
+			//如果有绑定函数（角色监听这个事件），就执行
+			//OtherActor 是被击中的 Pawn
 			OnWeaponHitTarget.ExecuteIfBound(OtherActor);
 			//TODO:Implement hit check for enemy characters
 		}
@@ -52,15 +60,23 @@ void AWarriorWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* Overlap
 void AWarriorWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+
+	//与 BeginOverlap 类似
+	//这里触发的是“武器离开目标”的事件
+	
 	APawn* WeaponOwingPawn = GetInstigator<APawn>();
+
 
 	checkf(WeaponOwingPawn,TEXT("Forgot to assign an instiagtor as the owning pawn for the weapon: %s"),*GetName());
 
+
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
+
 		if (WeaponOwingPawn != HitPawn)
 		{
 			//Debug::Print(GetName() + TEXT("end overlap with ") + HitPawn -> GetName(),FColor::Red);
+			
 			OnWeaponPulledFromTarget.ExecuteIfBound(OtherActor);
 			//TODO:Implement hit check for enemy characters
 		}

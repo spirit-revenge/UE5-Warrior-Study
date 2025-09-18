@@ -49,8 +49,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary",meta=(DisplayName = "Does Actor Have Tag", ExpandEnumAsExecs = "OutConfirmType"))
 	static void BP_DoesActorHaveTag(AActor* InActor, FGameplayTag TagToCheck,EWarriorConfirmType& OutConfirmType);
 
+	//这是一个静态函数，可以直接通过类名调用，而不用创建对象实例
+	//直接返回从 InActor 找到的战斗组件指针，如果找不到一般返回 nullptr
+	//native给c++使用
 	static UPawnCombatComponent* NativeGetPawnCombatComponentFromActor(AActor* InActor);
 
+	//DisplayName：蓝图节点的显示名字
+	//BP_ 开头给蓝图使用
 	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary",meta=(DisplayName = "Get Pawn Combat Component From Actor", ExpandEnumAsExecs = "OutValidType"))
 	static UPawnCombatComponent* BP_GetPawnCombatComponentFromActor(AActor* InActor,EWarriorValidType& OutValidType);
 };

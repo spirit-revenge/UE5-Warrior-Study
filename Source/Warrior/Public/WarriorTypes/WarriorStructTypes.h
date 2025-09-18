@@ -61,6 +61,9 @@ struct FWarriorHeroWeaponData
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,meta=(TitleProperty = "InputTag"))
 	TArray<FWarriorHeroAbilitySet> DefaultWeaponAbilities;
 
+	//武器基础伤害
+	//GAS 提供的一个非常实用的结构体，用来存储“可扩展的数值”。
+	//可以通过 FScalableFloat::GetValueAtLevel() 获取一个和等级挂钩的最终数值。
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FScalableFloat WeaponBaseDamage;
 };

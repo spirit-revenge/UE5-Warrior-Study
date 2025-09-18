@@ -55,8 +55,11 @@ void UWarriorFunctionLibrary::BP_DoesActorHaveTag(AActor* InActor, FGameplayTag 
 
 UPawnCombatComponent* UWarriorFunctionLibrary::NativeGetPawnCombatComponentFromActor(AActor* InActor)
 {
+	//检查是否空指针
 	check(InActor);
 
+	//判断这个 Actor 有没有实现 IPawnCombatInterface 接口。
+	//如果实现了，就通过接口调用 GetPawnCombatComponent() 返回组件
 	if (IPawnCombatInterface* PawnCombatInterface = Cast<IPawnCombatInterface>(InActor))
 	{
 		return PawnCombatInterface->GetPawnCombatComponent();
@@ -67,10 +70,12 @@ UPawnCombatComponent* UWarriorFunctionLibrary::NativeGetPawnCombatComponentFromA
 UPawnCombatComponent* UWarriorFunctionLibrary::BP_GetPawnCombatComponentFromActor(AActor* InActor,
 	EWarriorValidType& OutValidType)
 {
+	//蓝图版本封装了C++版的函数的调用，并且根据返回值设置 OutValidType。
 	UPawnCombatComponent* CombatComponent = NativeGetPawnCombatComponentFromActor(InActor);
 
 	OutValidType = CombatComponent ? EWarriorValidType::Valid : EWarriorValidType::Invalid;
 
+	//返回值仍然是 CombatComponent，这样蓝图里可以直接拿到引用。
 	return CombatComponent;
 }
 

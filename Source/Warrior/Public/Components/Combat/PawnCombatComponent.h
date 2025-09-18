@@ -49,12 +49,18 @@ public:
 	AWarriorWeaponBase* GetCharacterCurrentEquippedWeapon() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Warrior|Combat")
+	//控制武器碰撞开关
+	//bShouldEnable → 是否启用碰撞。
+	//ToggleDamageType → 可以指定是当前装备的武器还是其他类型，默认是当前装备武器。
 	void ToggleWeaponCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType = EToggleDamageType::CurrentEquippedWeapon);
 
+	//OnHitTargetActor → 当武器击中目标时调用
 	virtual void OnHitTargetActor(AActor* HitActor);
+	//OnWeaponPulledFromTargetActor → 当武器与目标分离时调用
 	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor);
 
 protected:
+	//存储当前武器碰撞盒内的目标列表
 	TArray<AActor*> OverLappedActors;
 	
 private:
