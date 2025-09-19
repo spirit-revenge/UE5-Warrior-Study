@@ -99,7 +99,7 @@ void UGEExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectCustom
 	//从 Source 捕获的属性中获取攻击力
 	//EvaluateParams 包含攻击者/目标的 GameplayTag 信息，可用于条件计算
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetFWarriorDamageCapture().AttackPowerDef,EvaluateParams, SourceAttackPower);
-	Debug::Print(TEXT("SourceAttackPower"), SourceAttackPower);
+	// Debug::Print(TEXT("SourceAttackPower"), SourceAttackPower);
 	
 	float BaseDamage = 0.f;
 	int32 UsedLightAttackComboCount = 0;
@@ -113,25 +113,25 @@ void UGEExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectCustom
 		if (TagMagnitude.Key.MatchesTagExact(WarriorGameplayTags::Shared_SetByCaller_BaseDamage))
 		{
 			BaseDamage = TagMagnitude.Value;
-			Debug::Print(TEXT("BaseDamage"), BaseDamage);
+			// Debug::Print(TEXT("BaseDamage"), BaseDamage);
 		}
 
 		if (TagMagnitude.Key.MatchesTagExact(WarriorGameplayTags::Player_SetByCaller_AttackType_Light))
 		{
 			UsedLightAttackComboCount = TagMagnitude.Value;
-			Debug::Print(TEXT("UsedLightAttackComboCount"), UsedLightAttackComboCount);
+			// Debug::Print(TEXT("UsedLightAttackComboCount"), UsedLightAttackComboCount);
 		}
 		if (TagMagnitude.Key.MatchesTagExact(WarriorGameplayTags::Player_SetByCaller_AttackType_Heavy))
 		{
 			UsedHeavyAttackComboCount = TagMagnitude.Value;
-			Debug::Print(TEXT("UsedHeavyAttackComboCount"), UsedHeavyAttackComboCount);
+			// Debug::Print(TEXT("UsedHeavyAttackComboCount"), UsedHeavyAttackComboCount);
 		}
 	}
 	
 	float TargetDefensePower = 0.f;
 	//从目标的 DefensePower 属性获取防御力，用于伤害减免计算
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetFWarriorDamageCapture().DefensePowerDef,EvaluateParams,TargetDefensePower);
-	Debug::Print(TEXT("TargetDefensePower"), TargetDefensePower);
+	// Debug::Print(TEXT("TargetDefensePower"), TargetDefensePower);
 
 	//轻攻击加成：每次连击增加 5%
 	if (UsedLightAttackComboCount != 0)
@@ -140,7 +140,7 @@ void UGEExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectCustom
 
 		//将基础伤害 BaseDamage 按连击次数缩放
 		BaseDamage *= DamageIncreasePercentLight;
-		Debug::Print(TEXT("ScaledBaseDamageLight"), BaseDamage);
+		// Debug::Print(TEXT("ScaledBaseDamageLight"), BaseDamage);
 	}
 
 	//重攻击加成：每次连击增加 15%
@@ -151,7 +151,7 @@ void UGEExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectCustom
 
 		//将基础伤害 BaseDamage 按连击次数缩放
 		BaseDamage *= DamageIncreasePercentHeavy;
-		Debug::Print(TEXT("ScaledBaseDamageHeavy"), BaseDamage);
+		// Debug::Print(TEXT("ScaledBaseDamageHeavy"), BaseDamage);
 	}
 
 	//最终伤害计算

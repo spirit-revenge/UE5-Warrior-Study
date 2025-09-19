@@ -25,6 +25,8 @@ class WARRIOR_API UWarriorAttributeSet : public UAttributeSet
 public:
 	UWarriorAttributeSet();
 
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData &Data) override;
+	
 	//FGameplayAttributeData：
 	//	内部包含 BaseValue 和 CurrentValue
 	//	可与 AbilitySystem 的 GameplayEffect 绑定，实现自动加减和同步
