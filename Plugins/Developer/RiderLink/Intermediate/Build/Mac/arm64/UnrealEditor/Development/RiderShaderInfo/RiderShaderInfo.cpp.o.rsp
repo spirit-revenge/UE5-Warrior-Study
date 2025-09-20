@@ -1,0 +1,82 @@
+-c
+-pipe
+-I"."
+-I"Runtime/Core/Public"
+-I"Runtime/Core/Internal"
+-I"Runtime/TraceLog/Public"
+-I"Runtime/Projects/Public"
+-I"Runtime/Projects/Internal"
+-I"Runtime/Json/Public"
+-I"Runtime/RenderCore/Public"
+-I"Runtime/RenderCore/Internal"
+-I"Runtime/RHI/Public"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source"
+-Wall
+-Werror
+-Wdelete-non-virtual-dtor
+-Wenum-conversion
+-Wbitfield-enum-conversion
+-Wno-enum-enum-conversion
+-Wno-enum-float-conversion
+-Wno-ambiguous-reversed-operator
+-Wno-deprecated-anon-enum-enum-conversion
+-Wno-deprecated-volatile
+-Wno-unused-but-set-variable
+-Wno-unused-but-set-parameter
+-Wno-ordered-compare-function-pointers
+-Wno-bitwise-instead-of-logical
+-Wno-deprecated-copy
+-Wno-deprecated-copy-with-user-provided-copy
+-Wno-invalid-unevaluated-string
+-Wno-gnu-string-literal-operator-template
+-Wno-inconsistent-missing-override
+-Wno-invalid-offsetof
+-Wno-switch
+-Wno-tautological-compare
+-Wno-unknown-pragmas
+-Wno-unused-function
+-Wno-unused-lambda-capture
+-Wno-unused-local-typedef
+-Wno-unused-private-field
+-Wno-unused-variable
+-Wno-undefined-var-template
+-Wno-shadow
+-Wundef
+-Wno-float-conversion
+-Wno-implicit-float-conversion
+-Wno-implicit-int-conversion
+-Wno-c++11-narrowing
+-fdiagnostics-absolute-paths
+-fdiagnostics-color
+-Wno-unknown-warning-option
+-Wno-range-loop-analysis
+-Wno-single-bit-bitfield-constant-conversion
+-Wno-shadow
+-Wno-invalid-unevaluated-string
+-Wno-deprecated-this-capture
+-ffp-contract=off
+-fno-delete-null-pointer-checks
+-O3
+-fexceptions
+-DPLATFORM_EXCEPTIONS_DISABLED=0
+-gdwarf-4
+-fexceptions
+-DPLATFORM_EXCEPTIONS_DISABLED=0
+-fvisibility-ms-compat
+-fvisibility-inlines-hidden
+-fno-rtti
+-fmessage-length=0
+-fpascal-strings
+-fasm-blocks
+-ffp-contract=off
+-arch arm64
+-isysroot "/Applications/Xcode16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+-mmacosx-version-min=13.00
+-include "/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Intermediate/Build/Mac/arm64/UnrealEditor/Development/RiderShaderInfo/Definitions.h"
+-x objective-c++
+-std=c++20
+-stdlib=libc++
+"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RiderShaderInfo/RiderShaderInfo.cpp"
+-MD -MF"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Intermediate/Build/Mac/arm64/UnrealEditor/Development/RiderShaderInfo/RiderShaderInfo.cpp.d"
+-o "/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Intermediate/Build/Mac/arm64/UnrealEditor/Development/RiderShaderInfo/RiderShaderInfo.cpp.o"
+-DUE_USE_SWIFT_UI_MAIN=0

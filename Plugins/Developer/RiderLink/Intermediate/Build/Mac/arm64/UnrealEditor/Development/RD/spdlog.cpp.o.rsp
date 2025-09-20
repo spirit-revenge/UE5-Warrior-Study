@@ -1,0 +1,89 @@
+-c
+-pipe
+-I"."
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/src"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/src/rd_core_cpp/src/main"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/src/rd_framework_cpp/src/main/util"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/src/rd_gen_cpp/src"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/thirdparty"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/thirdparty/ordered-map/include"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/thirdparty/optional/tl"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/thirdparty/variant/include"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/thirdparty/string-view-lite/include"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/include"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/thirdparty/clsocket/src"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/thirdparty/CTPL/include"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/thirdparty/utf-cpp/include"
+-I"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source"
+-I"Runtime/Core/Public"
+-I"Runtime/Core/Internal"
+-I"Runtime/TraceLog/Public"
+-Wall
+-Werror
+-Wdelete-non-virtual-dtor
+-Wenum-conversion
+-Wbitfield-enum-conversion
+-Wno-enum-enum-conversion
+-Wno-enum-float-conversion
+-Wno-unused-but-set-variable
+-Wno-unused-but-set-parameter
+-Wno-ordered-compare-function-pointers
+-Wno-bitwise-instead-of-logical
+-Wno-deprecated-copy
+-Wno-deprecated-copy-with-user-provided-copy
+-Wno-invalid-unevaluated-string
+-Wno-gnu-string-literal-operator-template
+-Wno-inconsistent-missing-override
+-Wno-invalid-offsetof
+-Wno-switch
+-Wno-tautological-compare
+-Wno-unknown-pragmas
+-Wno-unused-function
+-Wno-unused-lambda-capture
+-Wno-unused-local-typedef
+-Wno-unused-private-field
+-Wno-unused-variable
+-Wno-undefined-var-template
+-Wno-shadow
+-Wundef
+-Wno-float-conversion
+-Wno-implicit-float-conversion
+-Wno-implicit-int-conversion
+-Wno-c++11-narrowing
+-fdiagnostics-absolute-paths
+-fdiagnostics-color
+-Wno-unknown-warning-option
+-Wno-range-loop-analysis
+-Wno-single-bit-bitfield-constant-conversion
+-Wno-shadow
+-Wno-invalid-unevaluated-string
+-Wno-deprecated-this-capture
+-ffp-contract=off
+-fno-delete-null-pointer-checks
+-O3
+-fexceptions
+-DPLATFORM_EXCEPTIONS_DISABLED=0
+-gdwarf-4
+-fexceptions
+-DPLATFORM_EXCEPTIONS_DISABLED=0
+-fvisibility-ms-compat
+-fvisibility-inlines-hidden
+-frtti
+-fmessage-length=0
+-fpascal-strings
+-fasm-blocks
+-ffp-contract=off
+-arch arm64
+-isysroot "/Applications/Xcode16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+-mmacosx-version-min=13.00
+-include "/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Intermediate/Build/Mac/arm64/UnrealEditor/Development/RD/Definitions.h"
+-x objective-c++
+-std=c++17
+-stdlib=libc++
+"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Source/RD/thirdparty/spdlog/src/spdlog.cpp"
+-MD -MF"/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Intermediate/Build/Mac/arm64/UnrealEditor/Development/RD/spdlog.cpp.d"
+-o "/Users/tengyue/Documents/Unreal Projects/Warrior/Plugins/Developer/RiderLink/Intermediate/Build/Mac/arm64/UnrealEditor/Development/RD/spdlog.cpp.o"
+-DUE_USE_SWIFT_UI_MAIN=0
