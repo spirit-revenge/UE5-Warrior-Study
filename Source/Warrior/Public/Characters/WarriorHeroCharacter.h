@@ -12,7 +12,7 @@ class UCameraComponent;
 class UDataAsset_InputConfig;
 struct FInputActionValue;
 class UHeroCombatComponent;
-
+class UHeroUIComponent;
 /**
  * hero的角色类
  */
@@ -27,6 +27,10 @@ public:
 	//~ Begin IPawnCombatInterface Interface.
 	virtual UPawnCombatComponent* GetPawnCombatComponent() const override;
 	//~ End IPawnCombatInterface Interface
+
+	//~ Begin IPawnUIInterface Interface.
+	virtual UPawnUIComponent* GetPawnUIComponent() const override;
+	//~ End IPawnUIInterface Interface
 	
 protected:
 	//~ Begin APawn Interface.
@@ -60,6 +64,9 @@ private:
 	//英雄的战斗组件 ，管理攻击、连招、武器等战斗逻辑
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Combat",meta=(AllowPrivateAccess = "true"))
 	UHeroCombatComponent* HeroCombatComponent;
+	
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="UI",meta=(AllowPrivateAccess = "true"))
+	UHeroUIComponent* HeroUIComponent;
 #pragma endregion
 
 #pragma region Inputs

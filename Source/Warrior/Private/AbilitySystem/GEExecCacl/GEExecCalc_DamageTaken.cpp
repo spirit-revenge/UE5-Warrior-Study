@@ -156,7 +156,7 @@ void UGEExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectCustom
 
 	//最终伤害计算
 	const float FinalDamageDone = BaseDamage * SourceAttackPower / TargetDefensePower;
-	Debug::Print(TEXT("FinalDamageDone"), FinalDamageDone);
+	//Debug::Print(TEXT("FinalDamageDone"), FinalDamageDone);
 
 	//判断伤害大于零
 	if (FinalDamageDone > 0.f)

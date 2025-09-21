@@ -12,8 +12,10 @@
 #include "Components/Combat/HeroCombatComponent.h"
 #include "WarriorDebugHelper.h"
 #include "Camera/CameraComponent.h"
+#include "Components/UI/HeroUIComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/UI/HeroUIComponent.h"
 #include "HAL/Platform.h"
 
 AWarriorHeroCharacter::AWarriorHeroCharacter()
@@ -57,11 +59,19 @@ AWarriorHeroCharacter::AWarriorHeroCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
 	HeroCombatComponent = CreateDefaultSubobject<UHeroCombatComponent>(TEXT("HeroCombatComponent"));
+
+	HeroUIComponent = CreateDefaultSubobject<UHeroUIComponent>(TEXT("HeroUIComponent"));
+
 }
 
 UPawnCombatComponent* AWarriorHeroCharacter::GetPawnCombatComponent() const
 {
 	return HeroCombatComponent;
+}
+
+UPawnUIComponent* AWarriorHeroCharacter::GetPawnUIComponent() const
+{
+	return HeroUIComponent;	
 }
 
 void AWarriorHeroCharacter::PossessedBy(AController* NewController)
