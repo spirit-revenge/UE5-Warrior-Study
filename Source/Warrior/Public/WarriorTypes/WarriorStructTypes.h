@@ -66,4 +66,7 @@ struct FWarriorHeroWeaponData
 	//可以通过 FScalableFloat::GetValueAtLevel() 获取一个和等级挂钩的最终数值。
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FScalableFloat WeaponBaseDamage;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TSoftObjectPtr<UTexture2D> SoftWeaponIconTexture;
 };
