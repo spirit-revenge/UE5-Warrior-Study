@@ -55,6 +55,9 @@ void UHeroCombatComponent::OnHitTargetActor(AActor* HitActor)
 		Data
 	);
 
+	//发送 GameplayEvent
+	//通过 AbilitySystem 向角色发送 HitPause 事件
+	//能力系统（GameplayAbilities）监听此事件触发伤害技能、特效等逻辑
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 		GetOwningPawn(),
 		WarriorGameplayTags::Player_Event_HitPause,

@@ -67,6 +67,13 @@ struct FWarriorHeroWeaponData
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FScalableFloat WeaponBaseDamage;
 
+	//EditDefaultsOnly：
+	//	只能在 类默认对象（CDO） 或蓝图默认值里编辑。
+	//	实例化后的对象不可修改。适合用作“配置型资源”。
+	//BlueprintReadOnly：
+	//	蓝图可以读取，但不能修改这个属性。
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	//软引用不会立即加载资源，只有在真正需要时才会加载到内存中
+	//用来存储Icon的纹理
 	TSoftObjectPtr<UTexture2D> SoftWeaponIconTexture;
 };

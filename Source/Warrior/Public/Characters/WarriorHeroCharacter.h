@@ -65,7 +65,8 @@ private:
 	//英雄的战斗组件 ，管理攻击、连招、武器等战斗逻辑
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Combat",meta=(AllowPrivateAccess = "true"))
 	UHeroCombatComponent* HeroCombatComponent;
-	
+
+	//hero的ui component，用来储存ui component信息
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="UI",meta=(AllowPrivateAccess = "true"))
 	UHeroUIComponent* HeroUIComponent;
 #pragma endregion

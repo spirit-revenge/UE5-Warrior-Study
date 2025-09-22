@@ -11,11 +11,12 @@
 class AWarriorWeaponBase;
 
 UENUM(BlueprintType)
+//根据选择切换伤害来源，或者显示不同武器的伤害 UI
 enum class EToggleDamageType : uint8
 {
-	CurrentEquippedWeapon,
-	LeftHand,
-	RightHand,
+	CurrentEquippedWeapon,//CurrentEquippedWeapon → 当前装备的武器
+	LeftHand,//LeftHand → 左手武器
+	RightHand,//RightHand → 右手武器
 };
 
 /**

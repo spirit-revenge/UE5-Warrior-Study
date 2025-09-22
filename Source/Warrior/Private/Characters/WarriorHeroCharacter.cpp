@@ -58,6 +58,10 @@ AWarriorHeroCharacter::AWarriorHeroCharacter()
 	//设置行走时的减速力，数值越大，角色停得越快
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
+	//CreateDefaultSubobject
+	//	用于在 Actor/Pawn 构造函数中创建组件实例。
+	//	生成的组件会自动成为 Actor 的子对象，并由 Actor 生命周期管理（创建/销毁）。
+	//	TEXT("组件名称") 是内部名字，用于反射系统和编辑器识别。
 	HeroCombatComponent = CreateDefaultSubobject<UHeroCombatComponent>(TEXT("HeroCombatComponent"));
 
 	HeroUIComponent = CreateDefaultSubobject<UHeroUIComponent>(TEXT("HeroUIComponent"));
@@ -66,16 +70,19 @@ AWarriorHeroCharacter::AWarriorHeroCharacter()
 
 UPawnCombatComponent* AWarriorHeroCharacter::GetPawnCombatComponent() const
 {
+	//返回Hero的Combat Component
 	return HeroCombatComponent;
 }
 
 UPawnUIComponent* AWarriorHeroCharacter::GetPawnUIComponent() const
 {
+	//返回Pawn的UI Component
 	return HeroUIComponent;	
 }
 
 UHeroUIComponent* AWarriorHeroCharacter::GetHeroUIComponent() const
 {
+	//返回Hero的UI Component
 	return HeroUIComponent;
 }
 

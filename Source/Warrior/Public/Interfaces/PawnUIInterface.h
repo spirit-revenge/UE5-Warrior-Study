@@ -26,9 +26,12 @@ class WARRIOR_API IPawnUIInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	//纯虚函数，必须由实现类（Pawn）重写。返回 通用 Pawn UI 组件。
 	virtual UPawnUIComponent* GetPawnUIComponent() const = 0;
 
+	//返回HeroUIComponent
 	virtual UHeroUIComponent* GetHeroUIComponent() const;
 
+	//返回EnemyUIComponent
 	virtual UEnemyUIComponent* GetEnemyUIComponent() const;
 };

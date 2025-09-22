@@ -72,5 +72,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UWarriorAttributeSet,DamageTaken)
 
 private:
+	//弱引用接口指针
+	//缓存任意实现了 IPawnUIInterface 的 Pawn 或 Actor，而不用强引用
 	TWeakInterfacePtr<IPawnUIInterface> CachedPawnUIInterface;
 };
