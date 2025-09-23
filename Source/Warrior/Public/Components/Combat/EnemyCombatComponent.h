@@ -12,5 +12,5 @@
 UCLASS()
 class WARRIOR_API UEnemyCombatComponent : public UPawnCombatComponent
 {
-	
+	GENERATED_BODY()
 };
