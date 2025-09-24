@@ -25,7 +25,7 @@ AWarriorEnemyCharacter::AWarriorEnemyCharacter()
 
 	//bOrientRotationToMovement = false → 禁止自动面向移动方向。
 	//RotationRate、MaxWalkSpeed、BrakingDecelerationWalking 控制敌人移动行为
-	GetCharacterMovement() -> bUseControllerDesiredRotation = false;
+	GetCharacterMovement() -> bUseControllerDesiredRotation = true;
 	GetCharacterMovement() -> bOrientRotationToMovement = false;
 	GetCharacterMovement() -> RotationRate = FRotator(0.f,180.f,0.f);
 	GetCharacterMovement() -> MaxWalkSpeed = 300.f;
