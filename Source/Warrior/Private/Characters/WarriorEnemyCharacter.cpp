@@ -10,9 +10,6 @@
 #include "Components/WidgetComponent.h"
 #include "Widgets/WarriorWidgetBase.h"
 
-#include "WarriorDebugHelper.h"
-#include "Components/WidgetComponent.h"
-
 AWarriorEnemyCharacter::AWarriorEnemyCharacter()
 {
 	//AI 自动控制：AutoPossessAI = PlacedInWorldOrSpawned，确保敌人生成时由 AI Controller 控制
@@ -25,7 +22,7 @@ AWarriorEnemyCharacter::AWarriorEnemyCharacter()
 
 	//bOrientRotationToMovement = false → 禁止自动面向移动方向。
 	//RotationRate、MaxWalkSpeed、BrakingDecelerationWalking 控制敌人移动行为
-	GetCharacterMovement() -> bUseControllerDesiredRotation = true;
+	GetCharacterMovement() -> bUseControllerDesiredRotation = false;
 	GetCharacterMovement() -> bOrientRotationToMovement = false;
 	GetCharacterMovement() -> RotationRate = FRotator(0.f,180.f,0.f);
 	GetCharacterMovement() -> MaxWalkSpeed = 300.f;
