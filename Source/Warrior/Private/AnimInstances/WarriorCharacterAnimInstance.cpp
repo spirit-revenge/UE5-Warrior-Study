@@ -2,6 +2,8 @@
 
 
 #include "AnimInstances/WarriorCharacterAnimInstance.h"
+
+#include "KismetAnimationLibrary.h"
 #include "Characters/WarriorBaseCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -35,4 +37,6 @@ void UWarriorCharacterAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaS
 	//SizeSquared2D() 返回加速度平方长度，效率比 Size2D() 高（避免开方运算）
 	//判断是否大于 0，如果大于 0，说明玩家正在输入移动方向（有加速度）
 	bHasAcceleration = OwningMovementComponent->GetCurrentAcceleration().SizeSquared2D()>0.f;
+
+	LocomotionDirection = UKismetAnimationLibrary::CalculateDirection(OwningCharacter->GetVelocity(), OwningCharacter->GetActorRotation());
 }

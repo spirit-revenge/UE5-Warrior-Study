@@ -50,4 +50,7 @@ protected:
 	//是否有加速度。蓝图里可见，不能修改，不能在运行时修改。可以用来切换“跑动开始/停止”动画、触发转身动画等
 	UPROPERTY(VisibleDefaultsOnly,BlueprintReadOnly,Category="AnimData|LocomotionData")
 	bool bHasAcceleration;
+
+	UPROPERTY(VisibleDefaultsOnly,BlueprintReadOnly,Category="AnimData|LocomotionData")
+	float LocomotionDirection;
 };
