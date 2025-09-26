@@ -26,6 +26,8 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
 	UEnemyCombatComponent* GetEnemyCombatComponentFromActorInfo();
 
+	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
+	FGameplayEffectSpecHandle MakeEnemyDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, const FScalableFloat& InDamageScalableFloat);
 private:
 	//TWeakObjectPtr：弱引用，不会阻止 GC（垃圾回收）。
 	//作用：缓存敌人角色，避免多次查找（优化性能）。

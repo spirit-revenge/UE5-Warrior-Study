@@ -4,6 +4,7 @@
 #include "Characters/WarriorBaseCharacter.h"
 #include "AbilitySystem/WarriorAbilitySystemComponent.h"
 #include "AbilitySystem/WarriorAttributeSet.h"
+#include "MotionWarpingComponent.h"
 
 // Sets default values
 AWarriorBaseCharacter::AWarriorBaseCharacter()
@@ -19,6 +20,8 @@ AWarriorBaseCharacter::AWarriorBaseCharacter()
 	//TEXT("WarriorAbilitySystemComponent") → 子组件名字，可在编辑器或蓝图中看到
 	WarriorAbilitySystemComponent = CreateDefaultSubobject<UWarriorAbilitySystemComponent>(TEXT("WarriorAbilitySystemComponent"));
 
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
+	
 	//为角色创建属性集（AttributeSet）子组件
 	WarriorAttributeSet = CreateDefaultSubobject<UWarriorAttributeSet>(TEXT("WarriorAttributeSet"));
 }
