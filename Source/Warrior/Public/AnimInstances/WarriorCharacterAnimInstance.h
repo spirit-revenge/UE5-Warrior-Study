@@ -51,6 +51,7 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly,BlueprintReadOnly,Category="AnimData|LocomotionData")
 	bool bHasAcceleration;
 
+	//存储角色当前的移动方向，单位是 度
 	UPROPERTY(VisibleDefaultsOnly,BlueprintReadOnly,Category="AnimData|LocomotionData")
 	float LocomotionDirection;
 };

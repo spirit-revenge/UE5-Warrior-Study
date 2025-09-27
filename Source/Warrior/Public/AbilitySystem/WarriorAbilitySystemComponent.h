@@ -34,6 +34,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Warrior|Ability")
 	void RemovedGrantedHeroWeaponAbilities(UPARAM(ref) TArray<FGameplayAbilitySpecHandle>& InSpecHandlesToRemove);
 
+	//在 AbilitySystemComponent (ASC) 里，找到符合指定 FGameplayTag 的技能，并尝试调用 TryActivateAbility。	
 	UFUNCTION(BlueprintCallable, Category="Warrior|Ability")
 	bool TryActivateAbilityByTag(FGameplayTag AbilityTagToActivate);
 };

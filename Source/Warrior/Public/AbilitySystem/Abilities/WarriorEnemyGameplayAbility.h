@@ -26,6 +26,18 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
 	UEnemyCombatComponent* GetEnemyCombatComponentFromActorInfo();
 
+	/*
+	 * FGameplayEffectSpecHandle
+	 * UE GAS（Gameplay Ability System）里表示一个 GameplayEffect 的 实例化规格（Spec）句柄。
+	 * GameplayEffect = 配方
+	 * GameplayEffectSpec = 根据配方和参数（等级、上下文、SetByCaller 数据等）生成的一份“执行说明书”
+	 * FGameplayEffectSpecHandle = 指向该“执行说明书”的句柄，用于后续应用到目标。 
+	 */
+	//FScalableFloat 可伸缩浮点数，能随等级缩放。
+	//你可以用它作为伤害的基础数值（BaseDamage），并且写进 SetByCaller，供 ExecutionCalculation 使用。
+	
+	//这是一个 蓝图可调用的纯函数 (BlueprintPure)
+	//返回一个 FGameplayEffectSpecHandle，主要用来生成一个敌人攻击时使用的伤害 GameplayEffectSpec。
 	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
 	FGameplayEffectSpecHandle MakeEnemyDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, const FScalableFloat& InDamageScalableFloat);
 private:

@@ -65,6 +65,8 @@ protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AbilitySystem")
 	UWarriorAttributeSet* WarriorAttributeSet;
 
+	//UMotionWarpingComponent：Unreal Engine 5 的新组件，用于调整角色动画根运动（Root Motion）
+	//允许你在动画播放过程中动态改变角色的最终位置或旋转
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="MotionWarping")
 	UMotionWarpingComponent* MotionWarpingComponent;
 	

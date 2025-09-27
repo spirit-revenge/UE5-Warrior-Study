@@ -83,13 +83,19 @@ UPawnCombatComponent* UWarriorFunctionLibrary::BP_GetPawnCombatComponentFromActo
 
 bool UWarriorFunctionLibrary::IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn)
 {
+	//保证传入的两个 Pawn 都有效
 	check(QueryPawn && TargetPawn);
-	
+
+	//获取两个 Pawn 的 Controller，并尝试转换成 IGenericTeamAgentInterface
+	//IGenericTeamAgentInterface 是 UE5 用于团队/阵营系统的接口。
+	//通过这个接口，可以查询 Controller 所属的团队 ID (GetGenericTeamId())，从而判断敌我。
 	IGenericTeamAgentInterface* QueryTeamAgent = Cast<IGenericTeamAgentInterface>(QueryPawn->GetController());
 	IGenericTeamAgentInterface* TargetTeamAgent = Cast<IGenericTeamAgentInterface>(TargetPawn->GetController());
 
+	//检查两个 Controller 是否成功获取了团队接口
 	if (QueryTeamAgent && TargetTeamAgent)
 	{
+		//比较团队 ID，判断是否为敌对关系
 		return QueryTeamAgent->GetGenericTeamId() != TargetTeamAgent->GetGenericTeamId();
 	}
 	return false;

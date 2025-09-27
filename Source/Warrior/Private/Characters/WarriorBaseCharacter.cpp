@@ -20,6 +20,7 @@ AWarriorBaseCharacter::AWarriorBaseCharacter()
 	//TEXT("WarriorAbilitySystemComponent") → 子组件名字，可在编辑器或蓝图中看到
 	WarriorAbilitySystemComponent = CreateDefaultSubobject<UWarriorAbilitySystemComponent>(TEXT("WarriorAbilitySystemComponent"));
 
+	//为角色创建一个 UMotionWarpingComponent 子组件
 	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	
 	//为角色创建属性集（AttributeSet）子组件

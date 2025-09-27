@@ -38,5 +38,12 @@ void UWarriorCharacterAnimInstance::NativeThreadSafeUpdateAnimation(float DeltaS
 	//判断是否大于 0，如果大于 0，说明玩家正在输入移动方向（有加速度）
 	bHasAcceleration = OwningMovementComponent->GetCurrentAcceleration().SizeSquared2D()>0.f;
 
+	//CalculateDirection 会返回一个 浮点角度，表示角色移动方向相对于自身前方的偏移角：0° → 向前，90° → 向右，-90° → 向左，180° 或 -180° → 向后
+	//Velocity (OwningCharacter->GetVelocity())
+	//	获取角色当前的世界速度向量 (X, Y, Z)
+	//	速度为零时，角色静止
+	//ActorRotation (OwningCharacter->GetActorRotation())
+	//	获取角色当前朝向（旋转）
+	//	用于将速度向量转换到角色本地空间
 	LocomotionDirection = UKismetAnimationLibrary::CalculateDirection(OwningCharacter->GetVelocity(), OwningCharacter->GetActorRotation());
 }

@@ -41,11 +41,13 @@ void AWarriorWeaponBase::OnCollisionBoxBeginOverlap(UPrimitiveComponent* Overlap
 	//checkf 确保拥有者存在，否则会触发断言并打印武器名称
 	checkf(WeaponOwingPawn,TEXT("Forgot to assign an instiagtor as the owning pawn for the weapon: %s"),*GetName());
 
-
+	//判断碰撞的对象是否是Pawn
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
+		//判断目标是否为敌人
 		if (UWarriorFunctionLibrary::IsTargetPawnHostile(WeaponOwingPawn, HitPawn))
 		{
+			//如果绑定则执行
 			OnWeaponHitTarget.ExecuteIfBound(OtherActor);
 		}
 	}
@@ -71,15 +73,24 @@ void AWarriorWeaponBase::OnCollisionBoxEndOverlap(UPrimitiveComponent* Overlappe
 {
 	//与 BeginOverlap 类似
 	//这里触发的是“武器离开目标”的事件
-	
+
+	//GetInstigator<APawn>() 获取发起武器的 Pawn。
 	APawn* WeaponOwingPawn = GetInstigator<APawn>();
-	
+
+	//如果武器没有指定所属 Pawn（Instigator），程序会直接报错并中断。
 	checkf(WeaponOwingPawn,TEXT("Forgot to assign an instiagtor as the owning pawn for the weapon: %s"),*GetName());
-	
+
+	//判断碰撞的Pawn是否存在
+	//OtherActor 是触发碰撞结束事件的 Actor。
+	//	这里只处理 Pawn（角色类）的碰撞，不处理静态物体或道具。
+	//	Cast<APawn> 安全地进行类型转换，若不是 Pawn 则跳过。
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
+		//判断目标是否为敌人
 		if (UWarriorFunctionLibrary::IsTargetPawnHostile(WeaponOwingPawn, HitPawn))
 		{
+			//ExecuteIfBound 表示如果有绑定函数，就调用它。
+			//通知外部系统（如战斗组件）“武器已经离开这个目标”，可以进行后续逻辑，比如重置攻击状态、结束连击检测等。
 			OnWeaponPulledFromTarget.ExecuteIfBound(OtherActor);
 		}
 	}

@@ -83,20 +83,26 @@ void UWarriorAbilitySystemComponent::RemovedGrantedHeroWeaponAbilities(
 
 bool UWarriorAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag AbilityTagToActivate)
 {
+	////检查是否存在
 	check(AbilityTagToActivate.IsValid());
 
+	//通过 GetActivatableGameplayAbilitySpecsByAllMatchingTags 找到所有符合 AbilityTagToActivate 的技能
 	TArray<FGameplayAbilitySpec*> FoundAbilitySpecs;
 	GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTagToActivate.GetSingleTagContainer(),FoundAbilitySpecs);
 
 	if (!FoundAbilitySpecs.IsEmpty())
 	{
+		//随机挑选一个 (FMath::RandRange) → 适合敌人 AI，有时候需要在一堆技能里随机出手
 		const int32 RandomAbilityIndex = FMath::RandRange(0, FoundAbilitySpecs.Num() - 1);
 		FGameplayAbilitySpec* SpecToActivate = FoundAbilitySpecs[RandomAbilityIndex];
 
+		//检查是否存在
 		check(SpecToActivate);
 
+		////检查是否存在
 		if (!SpecToActivate->IsActive())
 		{
+			//检查是否已激活 (!SpecToActivate->IsActive())，避免重复触发相同技能
 			return TryActivateAbility(SpecToActivate->Handle);
 		}
 	}

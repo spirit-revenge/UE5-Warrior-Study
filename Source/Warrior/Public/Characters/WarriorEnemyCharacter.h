@@ -18,6 +18,7 @@ class WARRIOR_API AWarriorEnemyCharacter : public AWarriorBaseCharacter
 	GENERATED_BODY()
 
 public:
+	//构造方法
 	AWarriorEnemyCharacter();
 
 	//~ Begin IPawnCombatInterface Interface.

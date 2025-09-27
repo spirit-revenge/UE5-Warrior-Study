@@ -52,6 +52,8 @@ FGameplayEffectSpecHandle UWarriorEnemyGameplayAbility::MakeEnemyDamageEffectSpe
 		ContextHandle
 	);
 
+	//把伤害值写入了 SetByCaller，对应之前 UGEExecCalc_DamageTaken 里的读取逻辑。
+	//这样就能动态支持不同武器/技能伤害。
 	EffectSpecHandle.Data -> SetSetByCallerMagnitude(
 		WarriorGameplayTags::Shared_SetByCaller_BaseDamage,
 		InDamageScalableFloat.GetValueAtLevel(GetAbilityLevel())
