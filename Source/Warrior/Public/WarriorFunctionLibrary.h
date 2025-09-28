@@ -9,6 +9,7 @@
 
 class UWarriorAbilitySystemComponent;
 class UPawnCombatComponent;
+struct FScalableFloat;
 
 /**
  * 自定义的 蓝图函数库 UWarriorFunctionLibrary，让 GAS 和 GameplayTag 的操作更方便地在蓝图中使用
@@ -62,4 +63,7 @@ public:
 	//判断两个 Pawn 是否是敌对关系
 	UFUNCTION(BlueprintPure, Category = "Warrior|FunctionLibrary")
 	static bool IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn);
+
+	UFUNCTION(BlueprintPure, Category = "Warrior|FunctionLibrary", meta=( CompactNodeTitle = "Get Value At Level" ))
+	static float GetScalableFloatValueAtLevel(const FScalableFloat& InScalableFloat, float InLevel = 1.f);
 };
