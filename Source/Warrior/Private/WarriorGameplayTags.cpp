@@ -9,19 +9,22 @@
 namespace WarriorGameplayTags
 {
 	/** Input Tags **/
-	UE_DEFINE_GAMEPLAY_TAG(InputTags_Move,"InputTag.Move");
-	UE_DEFINE_GAMEPLAY_TAG(InputTags_Look,"InputTag.Look");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move,"InputTag.Move");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Look,"InputTag.Look");
 	
-	UE_DEFINE_GAMEPLAY_TAG(InputTags_EquipAxe,"InputTag.EquipAxe");
-	UE_DEFINE_GAMEPLAY_TAG(InputTags_UnequipAxe,"InputTag.UnequipAxe");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_EquipAxe,"InputTag.EquipAxe");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_UnequipAxe,"InputTag.UnequipAxe");
 
-	UE_DEFINE_GAMEPLAY_TAG(InputTags_LightAttack_Axe,"InputTag.LightAttack.Axe");
-	UE_DEFINE_GAMEPLAY_TAG(InputTags_HeavyAttack_Axe,"InputTag.HeavyAttack.Axe");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_LightAttack_Axe,"InputTag.LightAttack.Axe");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_HeavyAttack_Axe,"InputTag.HeavyAttack.Axe");
 
-	UE_DEFINE_GAMEPLAY_TAG(InputTags_Roll,"InputTag.Roll");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Roll,"InputTag.Roll");
 
-	UE_DEFINE_GAMEPLAY_TAG(InputTags_MustBeHeld,"InputTag.MustBeHeld");
-	UE_DEFINE_GAMEPLAY_TAG(InputTags_MustBeHeld_Block,"InputTag.MustBeHeld.Block");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_MustBeHeld,"InputTag.MustBeHeld");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_MustBeHeld_Block,"InputTag.MustBeHeld.Block");
+
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggleable,"InputTag.Toggleable");
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggleable_TargetLock,"InputTag.Toggleable.TargetLock");
 	
 	/** Player Tags **/
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Equip_Axe,"Player.Ability.Equip.Axe");
@@ -31,6 +34,7 @@ namespace WarriorGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_HitPause,"Player.Ability.HitPause");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Roll,"Player.Ability.Roll");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Block,"Player.Ability.Block");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_TargetLock,"Player.Ability.TargetLock");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Axe,"Player.Weapon.Axe");
 	
@@ -42,6 +46,7 @@ namespace WarriorGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_JumpToFinisher,"Player.Status.JumpToFinisher");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Rolling,"Player.Status.Rolling");
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Blocking,"Player.Status.Blocking");
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_TargetLock,"Player.Status.TargetLock");
 	
 	UE_DEFINE_GAMEPLAY_TAG(Player_SetByCaller_AttackType_Light,"Player.SetByCaller.AttackType.Light");
 	UE_DEFINE_GAMEPLAY_TAG(Player_SetByCaller_AttackType_Heavy,"Player.SetByCaller.AttackType.Heavy");

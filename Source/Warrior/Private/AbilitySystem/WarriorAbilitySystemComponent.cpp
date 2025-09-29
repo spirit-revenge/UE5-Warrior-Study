@@ -19,14 +19,29 @@ void UWarriorAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& I
 	{
 		//每个 AbilitySpec 都有一组 DynamicAbilityTags（动态标签），这里用 HasTagExact 判断是否匹配当前输入的标签。
 		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag)) continue;
-		//如果匹配，就调用 TryActivateAbility(AbilitySpec.Handle) 来尝试激活这个技能。
-		TryActivateAbility(AbilitySpec.Handle);
+
+		if (InInputTag.MatchesTag(WarriorGameplayTags::InputTag_Toggleable))
+		{
+			if (AbilitySpec.IsActive())
+			{
+				CancelAbilityHandle(AbilitySpec.Handle);
+			}
+			else
+			{
+				TryActivateAbility(AbilitySpec.Handle);
+			}
+		}
+		else
+		{
+			//如果匹配，就调用 TryActivateAbility(AbilitySpec.Handle) 来尝试激活这个技能。
+			TryActivateAbility(AbilitySpec.Handle);
+		}
 	}
 }
 
 void UWarriorAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
 {
-	if (!InInputTag.IsValid() || !InInputTag.MatchesTag(WarriorGameplayTags::InputTags_MustBeHeld))
+	if (!InInputTag.IsValid() || !InInputTag.MatchesTag(WarriorGameplayTags::InputTag_MustBeHeld))
 	{
 		return;
 	}
