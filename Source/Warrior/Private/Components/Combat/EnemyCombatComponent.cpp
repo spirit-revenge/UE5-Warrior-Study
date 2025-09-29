@@ -4,7 +4,7 @@
 #include "Components/Combat/EnemyCombatComponent.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
-#include "WarriorDebugHelper.h"
+#include "WarriorFunctionLibrary.h"
 #include "WarriorGameplayTags.h"
 
 void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
@@ -23,12 +23,12 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 	//如果玩家正在阻挡 (bIsPlayerBlocking == true) 且敌人的攻击不是无法被阻挡 (bIsMyAttackUnblockable == false)
 	//则进一步判断阻挡是否成功 (bIsValidBlock)
 	bool bIsValidBlock = false;
-	const bool bIsPlayerBlocking = false;
+	const bool bIsPlayerBlocking = UWarriorFunctionLibrary::NativeDoesActorHaveTag(HitActor, WarriorGameplayTags::Player_Status_Blocking);
 	const bool bIsMyAttackUnblockable = false;
 
 	if (bIsPlayerBlocking && !bIsMyAttackUnblockable)
 	{
-		//TODO: check if the block is valid 
+		bIsValidBlock = UWarriorFunctionLibrary::IsValidBlock(GetOwningPawn(), HitActor);
 	}
 
 	//创建 FGameplayEventData 用于 Gameplay Ability System 事件传递。
@@ -40,7 +40,11 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 	//如果攻击被阻挡 (bIsValidBlock == true)
 	if (bIsValidBlock)
 	{
-		//TODO: handle successful block
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			HitActor,
+			WarriorGameplayTags::Player_Event_SuccessfulBlock,
+			EventData
+		);
 	}
 	else
 	{

@@ -33,7 +33,7 @@ public:
 
 	//如果 Actor 身上有这个 Tag，就移除它
 	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")
-	static void RemoveGameplayFromActorIfFound(AActor* InActor, FGameplayTag TagToRemove);
+	static void RemoveGameplayTagFromActorIfFound(AActor* InActor, FGameplayTag TagToRemove);
 
 	//一个纯 C++ 的工具函数。
 	//检查给定 Actor 是否包含指定 Tag。
@@ -69,4 +69,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Warrior|FunctionLibrary")
 	static FGameplayTag ComputeHitReactDirectionTag(AActor* InAttacker, AActor* InVictim, float& OutSingleDifference);
+
+	UFUNCTION(BlueprintPure, Category = "Warrior|FunctionLibrary")
+	static bool IsValidBlock(AActor* InAttacker, AActor* InDefender);
 };
