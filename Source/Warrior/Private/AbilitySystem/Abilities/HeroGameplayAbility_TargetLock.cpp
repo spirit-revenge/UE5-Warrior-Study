@@ -59,11 +59,13 @@ void UHeroGameplayAbility_TargetLock::OnTargetLockTick(float DeltaTime)
 
 	if (bShouldOverrideRotation)
 	{
-		const FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(
+		FRotator LookAtRot = UKismetMathLibrary::FindLookAtRotation(
 	GetHeroCharacterFromActorInfo() -> GetActorLocation(),
 	CurrentLockedActor -> GetActorLocation()
 		);
 
+		LookAtRot -= FRotator(TargetLockCameraOffsetDistance, 0.f, 0.f);
+		
 		const FRotator CurrentControlRot = GetHeroControllerFromActorInfo() -> GetControlRotation();
 		const FRotator TargetRot = FMath::RInterpTo(CurrentControlRot, LookAtRot, DeltaTime, TargetLockRotationInterpSpeed);
 		GetHeroControllerFromActorInfo()->SetControlRotation(FRotator(TargetRot.Pitch, TargetRot.Yaw, 0.f));
