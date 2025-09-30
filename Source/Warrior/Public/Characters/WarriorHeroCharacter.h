@@ -81,6 +81,12 @@ private:
 	void Input_Move(const FInputActionValue& InputActionValue);
 	//镜头移动输入
 	void Input_Look(const FInputActionValue& InputActionValue);
+
+	void Input_SwitchTargetTriggered(const FInputActionValue& InputActionValue);
+	void Input_SwitchTargetCompleted(const FInputActionValue& InputActionValue);
+
+	FVector2D SwitchDirection = FVector2D::ZeroVector;
+	
 	//按键按下输入
 	void Input_AbilityInputPressed(FGameplayTag InInputTag);
 	//按键释放输入
