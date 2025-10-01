@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "GameFramework/Actor.h"
 #include "WarriorProjectileBase.generated.h"
 
@@ -16,6 +17,7 @@ enum class EProjectileDamagePolicy : uint8
 class UProjectileMovementComponent;
 class UBoxComponent;
 class UNiagaraComponent;
+struct FGameplayEventData;
 
 UCLASS()
 class WARRIOR_API AWarriorProjectileBase : public AActor
@@ -39,4 +41,19 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	EProjectileDamagePolicy ProjectileDamagePolicy = EProjectileDamagePolicy::OnHit;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Projectile", meta = (ExposeOnSpawn = "true"))
+	FGameplayEffectSpecHandle ProjectileDamageEffectSpecHandle;
+	
+	UFUNCTION()
+	virtual void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION()
+	virtual void OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "On Spawn Projectile Hit FX"))
+	void BP_OnSpawnProjectileHitFX(const FVector& HitLocation);
+	
+private:
+	void HandleApplyProjectileDamage(APawn* InHitPawn, const FGameplayEventData& InPayload);
 };
