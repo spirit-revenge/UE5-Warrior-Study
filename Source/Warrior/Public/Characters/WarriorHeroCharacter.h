@@ -82,9 +82,12 @@ private:
 	//镜头移动输入
 	void Input_Look(const FInputActionValue& InputActionValue);
 
+	// 触发切换锁定目标
 	void Input_SwitchTargetTriggered(const FInputActionValue& InputActionValue);
+	//完成切换锁定目标
 	void Input_SwitchTargetCompleted(const FInputActionValue& InputActionValue);
 
+	//切换的方向
 	FVector2D SwitchDirection = FVector2D::ZeroVector;
 	
 	//按键按下输入

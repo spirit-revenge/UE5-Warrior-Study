@@ -205,29 +205,33 @@ void AWarriorHeroCharacter::Input_Look(const FInputActionValue& InputActionValue
 
 void AWarriorHeroCharacter::Input_SwitchTargetTriggered(const FInputActionValue& InputActionValue)
 {
+	//获取输入时的方向
 	SwitchDirection = InputActionValue.Get<FVector2D>();
 }
 
 void AWarriorHeroCharacter::Input_SwitchTargetCompleted(const FInputActionValue& InputActionValue)
 {
 	FGameplayEventData Data;
-	
+
+	//发送时间给actor
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-		this,
+		this, //发送给谁
+		//切换的方向X轴大于零为右边，小于零为左边
 		SwitchDirection.X > 0.f ? WarriorGameplayTags::Player_Event_SwitchTarget_Right : WarriorGameplayTags::Player_Event_SwitchTarget_Left,
-		Data
+		Data //事件的数据
 	);
 	
 }
 
 void AWarriorHeroCharacter::Input_AbilityInputPressed(FGameplayTag InInputTag)
 {
-	//触发输入
+	//触发按下输入
 	WarriorAbilitySystemComponent->OnAbilityInputPressed( InInputTag );
 }
 
 void AWarriorHeroCharacter::Input_AbilityInputReleased(FGameplayTag InInputTag)
 {
+	//触发释放输入
 	WarriorAbilitySystemComponent->OnAbilityInputReleased( InInputTag );
 }
 

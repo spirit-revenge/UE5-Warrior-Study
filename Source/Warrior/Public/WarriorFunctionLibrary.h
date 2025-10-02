@@ -64,15 +64,19 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Warrior|FunctionLibrary")
 	static bool IsTargetPawnHostile(APawn* QueryPawn, APawn* TargetPawn);
 
+	////获取一个 FScalableFloat 在指定等级下的值
 	UFUNCTION(BlueprintPure, Category = "Warrior|FunctionLibrary", meta=( CompactNodeTitle = "Get Value At Level" ))
 	static float GetScalableFloatValueAtLevel(const FScalableFloat& InScalableFloat, float InLevel = 1.f);
 
+	//计算受击角色应该播放的受击动画方向（前、后、左、右）
 	UFUNCTION(BlueprintPure, Category = "Warrior|FunctionLibrary")
 	static FGameplayTag ComputeHitReactDirectionTag(AActor* InAttacker, AActor* InVictim, float& OutSingleDifference);
 
+	//判断防御是否有效
 	UFUNCTION(BlueprintPure, Category = "Warrior|FunctionLibrary")
 	static bool IsValidBlock(AActor* InAttacker, AActor* InDefender);
 
+	//将 GameplayEffect 应用到目标 Actor
 	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")
 	static bool ApplyGameplayEffectSpecHandleToTargetActor(AActor* InInstigator, AActor* InTargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
 };

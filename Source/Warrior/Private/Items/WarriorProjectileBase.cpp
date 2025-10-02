@@ -13,32 +13,43 @@
 
 AWarriorProjectileBase::AWarriorProjectileBase()
 {
+	//不需要每帧 Tick → 节省性能
 	PrimaryActorTick.bCanEverTick = false;
+	//碰撞盒作为根组件，用于检测击中或重叠事件
 	ProjectileCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("ProjectileCollisionBox"));
 	SetRootComponent(ProjectileCollisionBox);
+	//初始碰撞类型为 QueryOnly（只查询，不参与物理模拟）。
+	//默认阻挡 Pawn 和世界物体
 	ProjectileCollisionBox -> SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
 	ProjectileCollisionBox -> SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 	ProjectileCollisionBox -> SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
 	ProjectileCollisionBox -> SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	//注册 Hit 和 BeginOverlap 回调事件
 	ProjectileCollisionBox -> OnComponentHit.AddUniqueDynamic(this, &ThisClass::OnProjectileHit);
 	ProjectileCollisionBox -> OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnProjectileBeginOverlap);
 
+	//粒子效果附着在根组件上，用于可视化投射物
 	ProjectileNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ProjectileNiagaraComponent"));
 	ProjectileNiagaraComponent -> SetupAttachment(GetRootComponent());
 
+	//投射物运动组件：控制初始速度、最大速度和方向。
+	//ProjectileGravityScale = 0 → 不受重力影响
 	ProjectileMovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComp"));
 	ProjectileMovementComp -> InitialSpeed = 700.f;
 	ProjectileMovementComp -> MaxSpeed = 900.f;
 	ProjectileMovementComp -> Velocity = FVector(1.f, 0.f, 0.f);
 	ProjectileMovementComp -> ProjectileGravityScale = 0.f;
 
+	//投射物 4 秒后自动销毁，避免无限存在
 	InitialLifeSpan = 4.f;
 }
 
 void AWarriorProjectileBase::BeginPlay()
 {
+	//调用父类
 	Super::BeginPlay();
 
+	//如果伤害策略是 OnBeginOverlap，把碰撞响应改为 Overlap，触发 OnProjectileBeginOverlap
 	if (ProjectileDamagePolicy == EProjectileDamagePolicy::OnBeginOverlap)
 	{
 		ProjectileCollisionBox -> SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
@@ -48,12 +59,15 @@ void AWarriorProjectileBase::BeginPlay()
 void AWarriorProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	//播放蓝图实现的击中特效
 	BP_OnSpawnProjectileHitFX(Hit.ImpactPoint);
 	
 	APawn* HitPawn = Cast<APawn>(OtherActor);
 
+	//判断是否为敌对pawn
 	if (!HitPawn || !UWarriorFunctionLibrary::IsTargetPawnHostile(GetInstigator(), HitPawn))
 	{
+		//只对 敌对 Pawn 生效，否则直接销毁投射物
 		Destroy();
 		return;
 	}
@@ -61,17 +75,21 @@ void AWarriorProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, 
 	bool bIsValidBlock = false;
 	const bool bIsPlayerBlocking = UWarriorFunctionLibrary::NativeDoesActorHaveTag(HitPawn, WarriorGameplayTags::Player_Status_Blocking);
 
+	//检查目标是否处于 阻挡状态
 	if (bIsPlayerBlocking)
 	{
+		//如果是，调用自定义逻辑判断是否有效格挡
 		bIsValidBlock = UWarriorFunctionLibrary::IsValidBlock(this, HitPawn);
 	}
 
+	//创建 GameplayEventData，用于 GAS 事件传递。
 	FGameplayEventData Data;
 	Data.Instigator = this;
 	Data.Target = HitPawn;
 	
 	if (bIsValidBlock)
 	{
+		//有效格挡 → 发送 SuccessfulBlock 事件
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			HitPawn,
 			WarriorGameplayTags::Player_Event_SuccessfulBlock,
@@ -80,9 +98,11 @@ void AWarriorProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, 
 	}
 	else
 	{
+		//普通击中 → 调用 HandleApplyProjectileDamage 处理伤害
 		HandleApplyProjectileDamage(HitPawn, Data);
 	}
 
+	//投射物命中后销毁，不再存在世界中
 	Destroy();
 }
 
@@ -93,10 +113,13 @@ void AWarriorProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* Overl
 
 void AWarriorProjectileBase::HandleApplyProjectileDamage(APawn* InHitPawn, const FGameplayEventData& InPayload)
 {
+	//确保 GameplayEffectSpecHandle 有效，如果没有赋值会报错
 	checkf(ProjectileDamageEffectSpecHandle.IsValid(), TEXT("Forgot to assign a valid spec handle to the projectile: %s"), *GetActorNameOrLabel());
 
+	//调用函数库，将 GAS GameplayEffect 应用到命中的 Pawn
 	const bool bWasApply = UWarriorFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(GetInstigator(), InHitPawn, ProjectileDamageEffectSpecHandle);
 
+	//如果伤害应用成功，发送 HitReact 事件，触发角色受击动画或其他逻辑
 	if (bWasApply)
 	{
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(

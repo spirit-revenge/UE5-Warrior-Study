@@ -106,18 +106,25 @@ bool UWarriorFunctionLibrary::IsTargetPawnHostile(APawn* QueryPawn, APawn* Targe
 
 float UWarriorFunctionLibrary::GetScalableFloatValueAtLevel(const FScalableFloat& InScalableFloat, float InLevel)
 {
+	//FScalableFloat 是 GAS 的可扩展浮点类型，支持按等级动态计算数值（如伤害、持续时间）。
+	//InLevel 默认 1，可以传任意等级
 	return InScalableFloat.GetValueAtLevel(InLevel);
 }
 
 FGameplayTag UWarriorFunctionLibrary::ComputeHitReactDirectionTag(AActor* InAttacker, AActor* InVictim,
 	float& OutSingleDifference)
 {
+	//检查攻击者和受害者是否都存在
 	check(InAttacker && InVictim);
 
+	//VictimForward → 受击者正前方向
 	const FVector VictimForward = InVictim->GetActorForwardVector();
+	//VictimToAttackerNormalized → 从受击者指向攻击者的方向向量
 	const FVector VictimToAttackerNormalized = (InAttacker->GetActorLocation() - InVictim->GetActorLocation()).GetSafeNormal();
 
+	//Dot + Cross → 计算夹角及左右方向
 	const float DotResult = FVector::DotProduct(VictimForward, VictimToAttackerNormalized);
+	//OutSingleDifference → 返回夹角，可用于 debug 或动画 blending
 	OutSingleDifference = UKismetMathLibrary::DegAcos(DotResult);
 
 	const FVector CrossResult = FVector::CrossProduct(VictimForward,VictimToAttackerNormalized);
@@ -127,6 +134,13 @@ FGameplayTag UWarriorFunctionLibrary::ComputeHitReactDirectionTag(AActor* InAtta
 		OutSingleDifference *= -1.f;
 	}
 
+	/*
+	 * 根据角度判断方向：
+	 * [-45°, 45°] → 前
+	 * [-135°, -45°] → 左
+	 * [-180°, -135°] 或 [135°, 180°] → 后
+	 * [45°, 135°] → 右
+	 */
 	if (OutSingleDifference >= -45.f && OutSingleDifference <= 45.f)
 	{
 		return WarriorGameplayTags::Shared_Status_HitReact_Front;
@@ -143,6 +157,8 @@ FGameplayTag UWarriorFunctionLibrary::ComputeHitReactDirectionTag(AActor* InAtta
 	{
 		return WarriorGameplayTags::Shared_Status_HitReact_Right;
 	}
+
+	//返回 GameplayTag，蓝图/动画系统可直接用
 	return WarriorGameplayTags::Shared_Status_HitReact_Front;
 }
 
@@ -150,20 +166,23 @@ bool UWarriorFunctionLibrary::IsValidBlock(AActor* InAttacker, AActor* InDefende
 {
 	check(InAttacker && InDefender);
 
+	//通过两者的 ForwardVector 做 点乘
 	const float DotResult = FVector::DotProduct(InAttacker->GetActorForwardVector(), InDefender->GetActorForwardVector());
 
-	/*const FString DebugString = FString::Printf(TEXT("Dot Result: %f %s"), DotResult, DotResult < -0.f ? TEXT("Valid Block") : TEXT("Invalid Block"));
-	Debug::Print(DebugString, DotResult < -0.f ? FColor::Green : FColor::Red);*/
-	
+	//点乘 < 0 → 两者朝向相反 → 视为有效格挡
+	//点乘 ≥ 0 → 攻击和防御方向相同 → 无效格挡
 	return DotResult < -0.f;
 }
 
 bool UWarriorFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(AActor* InInstigator, AActor* InTargetActor, const FGameplayEffectSpecHandle& InSpecHandle)
 {
+	//从施法者和目标 Actor 获取 UWarriorAbilitySystemComponent
 	UWarriorAbilitySystemComponent* SourceASC = NativeGetWarriorASCFromActor(InInstigator);
 	UWarriorAbilitySystemComponent* TargetASC = NativeGetWarriorASCFromActor(InTargetActor);
 
+	//调用 ApplyGameplayEffectSpecToTarget
 	FActiveGameplayEffectHandle ActiveGameplayEffectHandle = SourceASC -> ApplyGameplayEffectSpecToTarget(*InSpecHandle.Data, TargetASC);
 
+	//返回是否应用成功
 	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
 }
