@@ -16,4 +16,7 @@ class WARRIOR_API UEnemyCombatComponent : public UPawnCombatComponent
 public:
 	//当敌人武器或攻击命中目标时，这个函数会被调用
 	virtual void OnHitTargetActor(AActor* HitActor) override;
+	
+protected:
+	virtual void ToggleBodyCollisionBoxCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType) override;
 };
