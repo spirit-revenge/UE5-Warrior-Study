@@ -61,7 +61,9 @@ public:
 	virtual void OnWeaponPulledFromTargetActor(AActor* InteractedActor);
 
 protected:
+	//开启 / 关闭当前装备武器的碰撞检测
 	virtual void ToggleCurrentEquippingWeaponCollision(bool bShouldEnable);
+	//开启 / 关闭角色身体部位（如拳头）的碰撞检测
 	virtual void ToggleBodyCollisionBoxCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType);
 	//存储当前武器碰撞盒内的目标列表
 	TArray<AActor*> OverLappedActors;

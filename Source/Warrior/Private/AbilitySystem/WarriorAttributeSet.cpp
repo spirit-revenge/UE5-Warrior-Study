@@ -8,8 +8,6 @@
 #include "Components/UI/PawnUIComponent.h"
 #include "Components/UI/HeroUIComponent.h"
 
-#include "WarriorDebugHelper.h"
-
 UWarriorAttributeSet::UWarriorAttributeSet()
 {
 	//初始化，防止空指针

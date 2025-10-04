@@ -38,11 +38,19 @@ virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
 	//~ End APawn Interface
 
-#if WITH_EDITOR
+	/*
+	 * #if WITH_EDITOR 是 Unreal 的条件编译宏，意思是：
+	 * 这段代码只会在 编辑器（Editor）版本 编译时包含，
+	 * 不会被打包到最终的游戏（Cooked / Shipping）版本中。
+	 * 当你在 Unreal Editor 中编辑蓝图或修改属性时，这个函数会被编译进编辑器模块。
+	 * 当你打包成游戏运行时，编译器会忽略掉这一段
+	 */
+	#if WITH_EDITOR
 	//~ Begin UObject Interface.
+	//这是 UObject 的一个 虚函数，在编辑器中当某个属性在 Details 面板（或蓝图中）被修改时自动调用
 	virtual void PostEditChangeProperty( struct FPropertyChangedEvent& PropertyChangedEvent) override;
 	//~ End UObject Interface
-#endif
+	#endif
 	
 	//VisibleAnywhere, BlueprintReadOnly → 蓝图可查看，不可修改
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
@@ -50,16 +58,16 @@ virtual void BeginPlay() override;
 	UEnemyCombatComponent* EnemyCombatComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-	UBoxComponent* LeftHandCollisionBox;
+	UBoxComponent* LeftHandCollisionBox; //Boss左手碰撞体
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
-	FName LeftHandCollisionBoxAttachBoneName;
+	FName LeftHandCollisionBoxAttachBoneName; //Boss左手碰撞体绑定的mesh的关节点名
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
-	UBoxComponent* RightHandCollisionBox;
+	UBoxComponent* RightHandCollisionBox; //Boss右手碰撞体
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
-	FName RightHandCollisionBoxAttachBoneName;
+	FName RightHandCollisionBoxAttachBoneName; //Boss右手碰撞体绑定的mesh的关节点名
 	
 	//VisibleAnywhere, BlueprintReadOnly → 蓝图可查看，不可修改
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "UI")
@@ -72,6 +80,8 @@ virtual void BeginPlay() override;
 	UWidgetComponent* EnemyHealthWidgetComponent;
 
 	UFUNCTION()
+	//当碰撞体重叠时触发的事件
+	//用于绑定在碰撞盒上
 	virtual void OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	

@@ -20,8 +20,7 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 
 	//AddUnique 保证同一个目标只添加一次。
 	OverLappedActors.AddUnique(HitActor);
-
-	//TODO: implement block check
+	
 	//如果玩家正在阻挡 (bIsPlayerBlocking == true) 且敌人的攻击不是无法被阻挡 (bIsMyAttackUnblockable == false)
 	//则进一步判断阻挡是否成功 (bIsValidBlock)
 	bool bIsValidBlock = false;
@@ -63,15 +62,24 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 
 void UEnemyCombatComponent::ToggleBodyCollisionBoxCollision(bool bShouldEnable, EToggleDamageType ToggleDamageType)
 {
+	//GetOwningPawn<T>() 是从战斗组件所属的 Pawn（即敌人角色）里拿到一个特定类型的指针
 	AWarriorEnemyCharacter* OwningEnemyCharacter = GetOwningPawn<AWarriorEnemyCharacter>();
 
+	//如果拿不到角色实例（比如组件没有正确附加），就会中断运行并提示错误
 	check(OwningEnemyCharacter);
 
+	//从角色身上获取左右手的碰撞组件（之前在构造函数中创建的）。
 	UBoxComponent* LeftHandCollisionBox = OwningEnemyCharacter -> GetLeftHandCollisionBox();
 	UBoxComponent* RightHandCollisionBox = OwningEnemyCharacter -> GetRightHandCollisionBox();
 
+	//再次使用 check() 确保它们都存在
 	check(LeftHandCollisionBox && RightHandCollisionBox);
 
+	//通过 EToggleDamageType（枚举类型）区分是哪只手要启用碰撞
+	//当 bShouldEnable == true 时，开启 QueryOnly：
+	//→ 意味着组件能检测碰撞（Overlap / Hit），但不会物理阻挡。
+	//当 bShouldEnable == false 时，设置为 NoCollision：
+	//→ 禁用碰撞检测。
 	switch (ToggleDamageType)
 	{
 		case EToggleDamageType::LeftHand:
@@ -84,6 +92,7 @@ void UEnemyCombatComponent::ToggleBodyCollisionBoxCollision(bool bShouldEnable, 
 			break;
 	}
 
+	//重置已命中的 Actor 缓存
 	if (!bShouldEnable)
 	{
 		OverLappedActors.Empty();

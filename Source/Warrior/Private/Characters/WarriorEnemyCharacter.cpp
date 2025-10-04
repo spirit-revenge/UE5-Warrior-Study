@@ -42,14 +42,27 @@ AWarriorEnemyCharacter::AWarriorEnemyCharacter()
 	//附加到骨骼
 	EnemyHealthWidgetComponent->SetupAttachment(GetMesh());
 
+	//在构造阶段为角色创建一个名为 LeftHandCollisionBox 的盒体碰撞组件
 	LeftHandCollisionBox = CreateDefaultSubobject<UBoxComponent>("LeftHandCollisionBox");
+	//把碰撞盒挂到角色的骨骼网格体（USkeletalMeshComponent）下
 	LeftHandCollisionBox -> SetupAttachment(GetMesh());
+	//一开始碰撞是禁用状态
 	LeftHandCollisionBox -> SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+	//当这个碰撞盒检测到有其他物体（如玩家）进入时，
+	//会调用 OnBodyCollisionBoxBeginOverlap() 函数。
+	//AddUniqueDynamic() 是 Blueprint 安全版本的绑定方法：
+	//保证不会重复添加相同回调；
+	//并允许在蓝图中被识别。
 	LeftHandCollisionBox -> OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
 
+	//在构造阶段为角色创建一个名为 RightHandCollisionBox 的盒体碰撞组件
 	RightHandCollisionBox = CreateDefaultSubobject<UBoxComponent>("RightHandCollisionBox");
+	//把碰撞盒挂到角色的骨骼网格体（USkeletalMeshComponent）下
 	RightHandCollisionBox -> SetupAttachment(GetMesh());
+	//一开始碰撞是禁用状态
 	RightHandCollisionBox -> SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+	//当这个碰撞盒检测到有其他物体（如玩家）进入时，
+	//会调用 OnBodyCollisionBoxBeginOverlap() 函数。
 	RightHandCollisionBox -> OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
 }
 
@@ -95,15 +108,20 @@ void AWarriorEnemyCharacter::PossessedBy(AController* NewController)
 #if WITH_EDITOR
 void AWarriorEnemyCharacter::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
+	//调用父类
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
+	//如果用户在编辑器中修改了 LeftHandCollisionBoxAttachBoneName 变量，
+	//就立刻把左手碰撞盒重新附着到新的骨骼上
 	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass, LeftHandCollisionBoxAttachBoneName))
 	{
+		//挂载在左手上
 		LeftHandCollisionBox -> AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, LeftHandCollisionBoxAttachBoneName);
 	}
 
 	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass, RightHandCollisionBoxAttachBoneName))
 	{
+		//挂载在右手上
 		RightHandCollisionBox -> AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, RightHandCollisionBoxAttachBoneName);
 	}
 }
@@ -112,10 +130,13 @@ void AWarriorEnemyCharacter::PostEditChangeProperty(struct FPropertyChangedEvent
 void AWarriorEnemyCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                                             UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	//检查重叠的对象是否是角色
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
+		//判断双方是否为敌对阵营
 		if (UWarriorFunctionLibrary::IsTargetPawnHostile(this, HitPawn))
 		{
+			//通知战斗组件（EnemyCombatComponent）“命中了一个敌对角色”
 			EnemyCombatComponent -> OnHitTargetActor(HitPawn);
 		}
 	}
