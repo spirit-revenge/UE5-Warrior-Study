@@ -50,8 +50,9 @@ void UWarriorAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& 
 }
 
 void UWarriorAbilitySystemComponent::GrantHeroWeaponAbilities(
-	const TArray<FWarriorHeroAbilitySet>& InDefaultWeaponAbilities, int32 ApplyLevel,
-	TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles)
+	const TArray<FWarriorHeroAbilitySet>& InDefaultWeaponAbilities,
+	const TArray<FWarriorHeroSpecialAbilitySet>& InSpecialWeaponAbilities,
+	int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles)
 {
 	//检查输入数组是否为空
 	if (InDefaultWeaponAbilities.IsEmpty())
@@ -61,6 +62,26 @@ void UWarriorAbilitySystemComponent::GrantHeroWeaponAbilities(
 
 	//遍历能力集合 FWarriorHeroAbilitySet 
 	for (const FWarriorHeroAbilitySet& AbilitySet : InDefaultWeaponAbilities)
+	{
+		//，检查当前 AbilitySet 是否有效。
+		if (!AbilitySet.IsValid()) continue;
+
+		//创建一个新的 FGameplayAbilitySpec，表示要授予的技能。
+		FGameplayAbilitySpec AbilitySpec(AbilitySet.AbilityToGrant);
+		//SourceObject 设置为当前 AvatarActor（通常是角色自己）。
+		AbilitySpec.SourceObject = GetAvatarActor();
+		//Level 设置为 ApplyLevel，控制技能等级。
+		AbilitySpec.Level = ApplyLevel;
+		//DynamicAbilityTags 添加输入标签（用于匹配按键输入）
+		AbilitySpec.DynamicAbilityTags.AddTag(AbilitySet.InputTag);
+
+		//调用 GiveAbility() 将能力添加到这个 ASC。
+		//把返回的 SpecHandle 存到 OutGrantedAbilitySpecHandles 数组，方便以后移除。
+		OutGrantedAbilitySpecHandles.AddUnique(GiveAbility(AbilitySpec));
+	}
+
+	//遍历特殊能力集合 InSpecialWeaponAbilities 
+	for (const FWarriorHeroSpecialAbilitySet& AbilitySet : InSpecialWeaponAbilities)
 	{
 		//，检查当前 AbilitySet 是否有效。
 		if (!AbilitySet.IsValid()) continue;

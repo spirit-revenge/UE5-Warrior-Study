@@ -67,4 +67,6 @@ private:
 	//统一处理 GAS 的 GameplayEvent 或 ApplyGameplayEffectSpecToTarget。
 	//封装好逻辑，避免在 Hit/Overlap 里重复调用。
 	void HandleApplyProjectileDamage(APawn* InHitPawn, const FGameplayEventData& InPayload);
+
+	TArray<AActor*> OverlappedActors;
 };

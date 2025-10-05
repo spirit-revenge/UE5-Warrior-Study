@@ -25,10 +25,11 @@ public:
 
 	//UFUNCTION(BlueprintCallable)：表示这个函数可以在 Blueprint 里被调用。
 	//遍历传入的 InDefaultWeaponAbilities 数组（里面可能是技能类、输入绑定等信息）。
+	//遍历传入的 InSpecialWeaponAbilities 数组（里面是hero的特殊攻击输入类）。
 	//根据 ApplyLevel 为角色授予技能。
 	//把授予的技能的 FGameplayAbilitySpecHandle 保存到 OutGrantedAbilitySpecHandles 数组里，以便后续移除。
 	UFUNCTION(BlueprintCallable, Category="Warrior|Ability",meta=(ApplyLevel = "1"))
-	void GrantHeroWeaponAbilities(const TArray<FWarriorHeroAbilitySet>& InDefaultWeaponAbilities, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles);
+	void GrantHeroWeaponAbilities(const TArray<FWarriorHeroAbilitySet>& InDefaultWeaponAbilities, const TArray<FWarriorHeroSpecialAbilitySet>& InSpecialWeaponAbilities, int32 ApplyLevel, TArray<FGameplayAbilitySpecHandle>& OutGrantedAbilitySpecHandles);
 
 	//移除之前授予的技能。
 	UFUNCTION(BlueprintCallable, Category="Warrior|Ability")

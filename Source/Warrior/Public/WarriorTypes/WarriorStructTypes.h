@@ -38,6 +38,18 @@ struct FWarriorHeroAbilitySet
 	bool IsValid() const;
 };
 
+USTRUCT(BlueprintType)
+struct FWarriorHeroSpecialAbilitySet : public FWarriorHeroAbilitySet
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TSoftObjectPtr<UMaterialInterface> AbilityIconMaterial;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,meta=(Categories = "Player.Cooldown"))
+	FGameplayTag AbilityCooldownTag;
+};
+
 //武器数据配置
 USTRUCT(BlueprintType)
 struct FWarriorHeroWeaponData
@@ -61,6 +73,9 @@ struct FWarriorHeroWeaponData
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,meta=(TitleProperty = "InputTag"))
 	TArray<FWarriorHeroAbilitySet> DefaultWeaponAbilities;
 
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,meta=(TitleProperty = "InputTag"))
+	TArray<FWarriorHeroSpecialAbilitySet> SpecialWeaponAbilities;
+	
 	//武器基础伤害
 	//GAS 提供的一个非常实用的结构体，用来存储“可扩展的数值”。
 	//可以通过 FScalableFloat::GetValueAtLevel() 获取一个和等级挂钩的最终数值。
