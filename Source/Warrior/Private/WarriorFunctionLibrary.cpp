@@ -9,6 +9,7 @@
 #include "AbilitySystem/WarriorAbilitySystemComponent.h"
 #include "Interfaces/PawnCombatInterface.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "WarriorTypes/WarriorCountDownAction.h"
 
 UWarriorAbilitySystemComponent* UWarriorFunctionLibrary::NativeGetWarriorASCFromActor(AActor* InActor)
 {
@@ -110,8 +111,7 @@ float UWarriorFunctionLibrary::GetScalableFloatValueAtLevel(const FScalableFloat
 	return InScalableFloat.GetValueAtLevel(InLevel);
 }
 
-FGameplayTag UWarriorFunctionLibrary::ComputeHitReactDirectionTag(AActor* InAttacker, AActor* InVictim,
-	float& OutSingleDifference)
+FGameplayTag UWarriorFunctionLibrary::ComputeHitReactDirectionTag(AActor* InAttacker, AActor* InVictim, float& OutSingleDifference)
 {
 	//检查攻击者和受害者是否都存在
 	check(InAttacker && InVictim);
@@ -185,3 +185,61 @@ bool UWarriorFunctionLibrary::ApplyGameplayEffectSpecHandleToTargetActor(AActor*
 	//返回是否应用成功
 	return ActiveGameplayEffectHandle.WasSuccessfullyApplied();
 }
+
+void UWarriorFunctionLibrary::CountDown(const UObject* WorldContextObject, float TotalTime, float UpdateInterval,
+	float& OutRemainingTime, EWarriorCountDownActionInput CountDownInput,
+	UPARAM(DisplayName = "Output") EWarriorCountDownActionOutput& CountDownOutput, FLatentActionInfo LatentInfo)
+{
+	//定义一个指向当前世界的指针。
+	UWorld* World = nullptr;
+
+	//GEngine 是全局引擎实例。
+	//GetWorldFromContextObject 是 Unreal 提供的标准方式，根据传入对象找到对应的 UWorld。
+	//如果找不到，会打印错误日志并返回 nullptr。
+	if (GEngine)
+	{
+		World = GEngine -> GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+	}
+
+	//找不到世界就直接返回（防止崩溃）
+	if (!World)
+	{
+		return;
+	}
+
+	//获取当前世界的延迟动作管理器（FLatentActionManager）。它负责管理所有延迟节点（比如 Delay、Timeline、自定义延迟任务等）
+	FLatentActionManager& LatentActionManager = World -> GetLatentActionManager();
+
+	//查找当前世界中是否已有同一个 UUID 的倒计时任务。意思是：一个蓝图节点若已启动一个倒计时，再次执行 CountDown(Start) 时不会重复创建。
+	FWarriorCountDownAction* FoundAction = LatentActionManager.FindExistingAction<FWarriorCountDownAction>(LatentInfo.CallbackTarget, LatentInfo.UUID);
+
+	//如果输入是 Start
+	if (CountDownInput == EWarriorCountDownActionInput::Start)
+	{
+		//当前没有正在执行的倒计时
+		if (!FoundAction)
+		{
+			//那就创建一个新的 FWarriorCountDownAction 对象
+			//注册到 LatentActionManager；
+			//从此刻开始，它会自动在 Tick 中执行 UpdateOperation()
+			LatentActionManager.AddNewAction(
+				LatentInfo.CallbackTarget,
+				LatentInfo.UUID,
+				new FWarriorCountDownAction(TotalTime, UpdateInterval, OutRemainingTime, CountDownOutput, LatentInfo)
+			);
+		}
+	}
+
+	//如果输入是 Cancel
+	if (CountDownInput == EWarriorCountDownActionInput::Cancel)
+	{
+		//查找到对应的倒计时任务
+		if (FoundAction)
+		{
+			//调用 CancelAction() → 将 bNeedToCancel 设为 true；
+			//在下一帧 UpdateOperation() 中检测到此标志，就会立即结束倒计时
+			FoundAction -> CancelAction();
+		}
+	}
+}
+

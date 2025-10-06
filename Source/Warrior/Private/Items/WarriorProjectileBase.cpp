@@ -109,21 +109,33 @@ void AWarriorProjectileBase::OnProjectileHit(UPrimitiveComponent* HitComponent, 
 void AWarriorProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	//OverlappedActors 是一个 TArray<AActor*>，用于记录已经被这个弹体命中过的 Actor。
+	//有些投射物可能因为碰撞体大或残留帧延迟，导致多次重叠触发。
+	//这行代码确保每个目标只处理 一次命中事件
 	if (OverlappedActors.Contains(OtherActor))
 	{
 		return;
 	}
 
+	//把该 OtherActor 加入命中列表。
+	//AddUnique 会自动防止重复添加（内部会先检查 Contains）
 	OverlappedActors.AddUnique(OtherActor);
 
+	//尝试把命中的 Actor 转型为 APawn。
+	//如果转换成功，说明命中的对象是一个角色
 	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
+		//构建一个 FGameplayEventData，用于传递 Gameplay 事件上下文。
+		//Instigator：谁发射的这个弹体（通常是角色）。
+		//Target：被击中的 Pawn。
 		FGameplayEventData Data;
 		Data.Instigator = GetInstigator();
 		Data.Target = HitPawn;
-		
+
+		//调用静态函数 IsTargetPawnHostile 判断是否敌对
 		if (UWarriorFunctionLibrary::IsTargetPawnHostile(GetInstigator(), HitPawn))
 		{
+			//命中后处理逻辑
 			HandleApplyProjectileDamage(HitPawn, Data);
 		}
 	}

@@ -82,3 +82,33 @@ FGameplayEffectSpecHandle UWarriorHeroGameplayAbility::MakeHeroDamageEffectSpecH
 	//返回 SpecHandle，供调用方应用。
 	return EffectSpecHandle;
 }
+
+bool UWarriorHeroGameplayAbility::GetAbilityRemainingCooldownByTag(FGameplayTag InCooldownTag, float& TotalCooldownTime,
+	float& RemainingCooldownTime)
+{
+	//检查传入的 Tag 是否有效（无效则在调试中触发断言）
+	check(InCooldownTag.IsValid());
+
+	//FGameplayEffectQuery 是一个过滤条件，用于查询当前激活的 GameplayEffect。
+	//这里用 MakeQuery_MatchAnyOwningTags()，表示查找 拥有任意匹配该冷却标签 的效果。
+	//GetSingleTagContainer() 把单个 FGameplayTag 转成 FGameplayTagContainer（GAS 的容器结构）。
+	FGameplayEffectQuery CooldownQuery = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(InCooldownTag.GetSingleTagContainer());
+
+	//GetActiveEffectsTimeRemainingAndDuration() 返回一个数组：
+	//每个元素是 TPair<RemainingTime, TotalDuration>。
+	//也就是说： .Key → 剩余时间 .Value → 整体持续时间（冷却总时长）
+	TArray< TPair< float, float > > TimeRemainingAndDuration =  GetAbilitySystemComponentFromActorInfo() -> GetActiveEffectsTimeRemainingAndDuration(CooldownQuery);
+
+	//如果有至少一个冷却效果匹配到：
+	//取第一个（默认假设一个冷却 tag 只会对应一个冷却效果）。
+	//赋值给输出参数。
+	if (!TimeRemainingAndDuration.IsEmpty())
+	{
+		RemainingCooldownTime = TimeRemainingAndDuration[0].Key;
+		TotalCooldownTime = TimeRemainingAndDuration[0].Value;
+	}
+
+	//如果剩余时间大于 0，说明冷却还没结束 → 返回 true。
+	//否则表示冷却已完成或未激活 → 返回 false。
+	return RemainingCooldownTime > 0.f; 
+}

@@ -5,6 +5,8 @@
 #include "AbilitySystem/WarriorAbilitySystemComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "WarriorFunctionLibrary.h"
+#include "WarriorGameplayTags.h"
 
 //这个函数会在 Ability 被授予（Granted） 时调用，比如角色学会了一个技能，或者通过装备/被动获得一个技能
 void UWarriorGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo,
@@ -90,4 +92,49 @@ FActiveGameplayEffectHandle UWarriorGameplayAbility::BP_ApplyEffectSpecHandleToT
 
 	//返回句柄给蓝图，让蓝图有机会存储，后续可以用 RemoveActiveGameplayEffect 移除
 	return ActiveGameplayEffectHandle;
+}
+
+void UWarriorGameplayAbility::ApplyGameplayEffectSpecHandleToHitResults(const FGameplayEffectSpecHandle& InSpecHandle,
+	const TArray<FHitResult>& InHitResults)
+{
+	//如果没有命中目标，直接返回。
+	if (InHitResults.IsEmpty())
+	{
+		return;
+	}
+
+	//GetAvatarActorFromActorInfo() 是从当前 Ability 的上下文（FGameplayAbilityActorInfo）里获取执行该技能的 Pawn。
+	//CastChecked 会在转换失败时报错（防御性编程）
+	APawn* OwningPawn = CastChecked<APawn>(GetAvatarActorFromActorInfo());
+
+	//遍历每个命中的对象，只对 APawn 类型的目标有效（忽略非角色类物体）。
+	for (const FHitResult& Hit : InHitResults)
+	{
+		if (APawn* HitPawn = Cast<APawn>(Hit.GetActor()))
+		{
+			//调用 UWarriorFunctionLibrary::IsTargetPawnHostile 判断敌我关系。
+			if (UWarriorFunctionLibrary::IsTargetPawnHostile(OwningPawn, HitPawn))
+			{
+				//NativeApplyEffectSpecHandleToTarget 是项目自定义的函数（通常包装了 GAS 的 ApplyGameplayEffectSpecToTarget）。
+				//它会把该 GameplayEffectSpec 应用到命中的目标的 AbilitySystemComponent 上。
+				FActiveGameplayEffectHandle ActiveGameplayEffectHandle = NativeApplyEffectSpecHandleToTarget(HitPawn, InSpecHandle);
+
+				//如果效果成功应用（如伤害命中目标），则构造一个 FGameplayEventData。
+				//并且指定发起者和目标
+				if (ActiveGameplayEffectHandle.WasSuccessfullyApplied())
+				{
+					FGameplayEventData Data;
+					Data.Instigator = OwningPawn;
+					Data.Target = HitPawn;
+
+					//通过 UAbilitySystemBlueprintLibrary::SendGameplayEventToActor 向目标发送一个 Gameplay Event。
+					UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+						HitPawn,
+						WarriorGameplayTags::Shared_Event_HitReact,
+						Data
+					);
+				}
+			}
+		}
+	}
 }

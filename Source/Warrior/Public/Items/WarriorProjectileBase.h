@@ -68,5 +68,6 @@ private:
 	//封装好逻辑，避免在 Hit/Overlap 里重复调用。
 	void HandleApplyProjectileDamage(APawn* InHitPawn, const FGameplayEventData& InPayload);
 
+	//所有碰撞到的Actor
 	TArray<AActor*> OverlappedActors;
 };

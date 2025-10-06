@@ -23,3 +23,18 @@ enum class EWarriorSuccessType : uint8
 	Successful,
 	Failed
 };
+
+UENUM()
+enum class EWarriorCountDownActionInput : uint8
+{
+	Start, //表示“启动”倒计时动作的输入信号。
+	Cancel //表示“取消”倒计时动作的输入信号。
+};
+
+UENUM()
+enum class EWarriorCountDownActionOutput : uint8
+{
+	Updated,   //表示当前倒计时仍在进行中，且刚更新过一次。
+	Completed, //表示倒计时正常结束。
+	Cancelled  //表示倒计时被提前终止（用户或系统取消）。
+};

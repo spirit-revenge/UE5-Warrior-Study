@@ -35,15 +35,22 @@ void UWarriorAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& I
 
 void UWarriorAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
 {
+	//IsValid()：检查标签是否为空或非法。
+	//如果标签无效或不是必须按住的类型，直接返回，不做任何操作
 	if (!InInputTag.IsValid() || !InInputTag.MatchesTag(WarriorGameplayTags::InputTag_MustBeHeld))
 	{
 		return;
 	}
 
+	//GetActivatableAbilities() 是 GAS 提供的函数，返回当前 AbilitySystemComponent 可以被激活的 所有技能规格（FGameplayAbilitySpec）
 	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
+		//DynamicAbilityTags：该技能在运行时绑定的标签集合。
+		//HasTagExact(InInputTag)：检查技能是否绑定了当前释放的输入标签。
+		//IsActive()：检查技能当前是否正在执行中。
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag) && AbilitySpec.IsActive())
 		{
+			//CancelAbilityHandle 是 GAS 提供的函数，用来取消指定 Handle 对应的技能
 			CancelAbilityHandle(AbilitySpec.Handle);
 		}
 	}

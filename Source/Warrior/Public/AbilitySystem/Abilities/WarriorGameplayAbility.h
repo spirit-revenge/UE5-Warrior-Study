@@ -56,4 +56,10 @@ protected:
 	//ExpandEnumAsExecs = "OutSuccessType" 蓝图执行节点会变成两个分支
 	UFUNCTION(BlueprintCallable, Category = "Warrior|Ability" ,meta=(DisplayName = "Apply Gameplay Effect Spec Handle To Target Actor", ExpandEnumAsExecs = "OutSuccessType"))
 	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandleToTarget(AActor* TargetActor,const FGameplayEffectSpecHandle& InSpecHandle,EWarriorSuccessType& OutSuccessType);
+
+	//用来把一个 GameplayEffectSpec（效果描述句柄）应用到多个命中的目标上（通常是攻击命中的多个敌人）
+	//InSpecHandle：已经构建好的 FGameplayEffectSpecHandle，描述了一个 GameplayEffect（比如伤害、减速等）。
+	//InHitResults：命中的所有对象（一般是由 Trace 或 Collision 检测得到的 FHitResult 数组）
+	UFUNCTION(BlueprintCallable, Category = "Warrior|Ability")
+	void ApplyGameplayEffectSpecHandleToHitResults(const FGameplayEffectSpecHandle& InSpecHandle, const TArray<FHitResult>& InHitResults);
 };

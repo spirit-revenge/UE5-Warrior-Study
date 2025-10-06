@@ -79,4 +79,27 @@ public:
 	//将 GameplayEffect 应用到目标 Actor
 	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")
 	static bool ApplyGameplayEffectSpecHandleToTargetActor(AActor* InInstigator, AActor* InTargetActor, const FGameplayEffectSpecHandle& InSpecHandle);
+
+	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary",
+		//Latent 声明这个函数是一个 潜在（延迟）动作，类似于蓝图的 Delay 节点，会在后台异步执行
+		//WorldContext = "WorldContextObject" 指定哪个参数提供当前世界上下文。
+		//LatentInfo = "LatentInfo" 告诉引擎 FLatentActionInfo 是用于追踪此延迟动作的结构。
+		//ExpandEnumAsExecs 在蓝图中会看到的针脚节点
+		//TotalTime = "1.0" 蓝图节点中默认倒计时总时长为 1.0s。
+		//UpdateInterval = "0.1" 蓝图节点中默认每 0.1 秒更新一次。
+		meta=(Latent, WorldContext = "WorldContextObject", LatentInfo = "LatentInfo", ExpandEnumAsExecs = "CountDownInput|CountDownOutput",
+			TotalTime = "1.0", UpdateInterval = "0.1"))
+	//WorldContextObject 当前世界上下文对象（例如 PlayerController、Actor 等）。Unreal 内置机制通过它来找到对应的 UWorld 实例
+	//TotalTime 倒计时的总时间长度（秒）。
+	//UpdateInterval 每隔多长时间更新一次（触发一次“Updated”输出）
+	//OutRemainingTime 输出参数，用于返回当前剩余倒计时。在蓝图中可以直接读取这个值，用于更新 UI（比如冷却时间文本）
+	//CountDownInput 输入动作类型（Start 或 Cancel）。用来告诉系统要开始计时还是取消计时
+	//CountDownOutput 输出执行结果（Updated、Completed、Cancelled）。蓝图里会作为执行引脚显示出来。
+	//FLatentActionInfo LatentInfo Unreal 内置结构，用于标识异步动作的上下文。
+	/** 对之前的 FWarriorCountDownAction 的 蓝图接口封装函数，它让蓝图可以以「延迟执行」的方式使用倒计时逻辑 **/
+	static void CountDown(const UObject* WorldContextObject, float TotalTime,
+		float UpdateInterval, float& OutRemainingTime,
+		EWarriorCountDownActionInput CountDownInput,
+		UPARAM(DisplayName = "Output") EWarriorCountDownActionOutput& CountDownOutput,
+		FLatentActionInfo LatentInfo);
 };

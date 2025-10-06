@@ -35,6 +35,13 @@ public:
 	//int32 InUsedComboCount 当前使用的连击次数，可能用来叠加伤害倍数或者触发连击专属效果
 	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
 	FGameplayEffectSpecHandle MakeHeroDamageEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass, float InWeaponBaseDamage, FGameplayTag InCurrentAttackTypeTag, int32 InUsedComboCount);
+
+	//InCooldownTag：冷却标签（Cooldown Tag），用于标识某个技能或效果的冷却。
+	//TotalCooldownTime（输出）：冷却总时长。
+	//RemainingCooldownTime（输出）：剩余冷却时间。
+	//返回值：是否当前仍处于冷却状态（true 表示正在冷却中）。
+	UFUNCTION(BlueprintCallable, Category = "Warrior|Ability")
+	bool GetAbilityRemainingCooldownByTag(FGameplayTag InCooldownTag, float& TotalCooldownTime, float& RemainingCooldownTime);
 private:
 	//弱引用指针（TWeakObjectPtr），缓存角色和控制器
 	//通常在 GetHeroCharacterFromActorInfo() 里先检查缓存，如果没有就从 ActorInfo 里取一次并保存，减少重复查找，提高性能

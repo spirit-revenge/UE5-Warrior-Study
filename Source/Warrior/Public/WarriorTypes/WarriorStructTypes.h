@@ -39,14 +39,18 @@ struct FWarriorHeroAbilitySet
 };
 
 USTRUCT(BlueprintType)
+//继承自项目中定义的 FWarriorHeroAbilitySet
 struct FWarriorHeroSpecialAbilitySet : public FWarriorHeroAbilitySet
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TSoftObjectPtr<UMaterialInterface> AbilityIconMaterial;
+	//TSoftObjectPtr 是 软引用（Soft Reference）。
+	//指向一个 UMaterialInterface 对象（通常是 Material 或 MaterialInstance）
+	TSoftObjectPtr<UMaterialInterface> SoftAbilityIconMaterial;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,meta=(Categories = "Player.Cooldown"))
+	//FGameplayTag：Gameplay Ability System 的核心类型之一，用来定义标签（类似于技能系统中的关键字）。
 	FGameplayTag AbilityCooldownTag;
 };
 
