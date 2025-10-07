@@ -20,6 +20,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAbilityIconSlotUpdatedDelegate, 
 //TotalCooldownTime 冷却总时长
 //RemainingCooldownTime 当前剩余冷却时间（一般刚开始等于总时长）
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAbilityCooldownBeginDelegate, FGameplayTag, AbilityInputTag, float, TotalCooldownTime, float, RemainingCooldownTime);
+
+//定义一个 动态多播委托（Dynamic Multicast Delegate） 类型，
+//名字叫 FOnStoneInteractedDelegate。
+//bool	委托广播时会传递一个布尔参数。
+//bShouldDisplayInputKey	这个参数的名称（仅供可读性和蓝图显示）。
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoneInteractedDelegate, bool, bShouldDisplayInputKey);
+
 /**
  * 
  */
@@ -48,4 +55,10 @@ public:
 	UPROPERTY(BlueprintCallable, BlueprintAssignable)
 	//技能进入冷却状态,开启冷却计时条、灰化技能图标、播放冷却动画
 	FOnAbilityCooldownBeginDelegate OnAbilityCooldownBegin;
+
+	//BlueprintCallable	允许蓝图中主动调用委托的方法（例如调用 .Broadcast()）。
+	//BlueprintAssignable	允许蓝图中把自定义事件绑定到这个委托。
+	UPROPERTY(BlueprintCallable, BlueprintAssignable)
+	//可以“绑定事件到 OnStoneInteracted”
+	FOnStoneInteractedDelegate OnStoneInteracted;
 };

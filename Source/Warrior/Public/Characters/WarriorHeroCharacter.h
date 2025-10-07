@@ -76,6 +76,10 @@ private:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="CharacterData",meta=(AllowPrivateAccess = "true"))
 	UDataAsset_InputConfig* InputConfigDataAsset;
 
+	//切换的方向
+	UPROPERTY()
+	FVector2D SwitchDirection = FVector2D::ZeroVector;
+	
 	//实际执行输入的函数
 	//移动输入
 	void Input_Move(const FInputActionValue& InputActionValue);
@@ -87,8 +91,8 @@ private:
 	//完成切换锁定目标
 	void Input_SwitchTargetCompleted(const FInputActionValue& InputActionValue);
 
-	//切换的方向
-	FVector2D SwitchDirection = FVector2D::ZeroVector;
+	// 拾取石头开始的输入绑定事件
+	void Input_PickUpStonesStarted(const FInputActionValue& InputActionValue);
 	
 	//按键按下输入
 	void Input_AbilityInputPressed(FGameplayTag InInputTag);

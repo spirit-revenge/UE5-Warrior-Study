@@ -6,6 +6,7 @@
 #include "AbilitySystem/Abilities/WarriorGameplayAbility.h"
 #include "WarriorHeroGameplayAbility.generated.h"
 
+class UHeroUIComponent;
 class AWarriorHeroCharacter;
 class AWarriorHeroController;
 /**
@@ -28,6 +29,10 @@ public:
 	//直接访问角色的战斗功能，比如技能连招、专属攻击
 	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
 	UHeroCombatComponent* GetHeroCombatComponentFromActorInfo();
+
+	//从Actor Info获取hero的UI组件
+	UFUNCTION(BlueprintPure, Category = "Warrior|Ability")
+	UHeroUIComponent* GetUIComponentFromActorInfo();
 
 	//TSubclassOf<UGameplayEffect> EffectClass  表示要使用的 GameplayEffect 类，用 TSubclassOf 限制只能传入 UGameplayEffect 的派生类，避免错误。
 	//float InWeaponBaseDamage 武器基础伤害，通常用来动态设置 GameplayEffect 的 SetByCaller 数值
