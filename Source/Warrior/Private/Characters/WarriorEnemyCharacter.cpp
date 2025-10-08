@@ -11,6 +11,7 @@
 #include "DataAssets/StartUpData/DataAsset_EnemyStartUpDataBase.h"
 #include "Components/UI/EnemyUIComponent.h"
 #include "Components/WidgetComponent.h"
+#include "GameModes/WarriorBaseGameMode.h"
 #include "Widgets/WarriorWidgetBase.h"
 
 AWarriorEnemyCharacter::AWarriorEnemyCharacter()
@@ -145,21 +146,52 @@ void AWarriorEnemyCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent*
 //异步加载启动数据
 void AWarriorEnemyCharacter::InitEnemyStartUpData()
 {
+	//如果初始数据为空则直接返回
 	if (CharacterStartUpData.IsNull())
 	{
 		return;
 	}
 
+	//游戏难度的等级
+	int32 AbilityApplyLevel = 1;
+
+	//GetWorld()：返回当前对象所在的世界（UWorld）实例。
+	//GetAuthGameMode<T>()：仅在 服务器端 返回 GameMode 实例，客户端调用则会返回 nullptr。
+	//因此，这里是在服务器逻辑下获取 AWarriorBaseGameMode 实例，并将其指针赋值给 BaseGameMode。
+	//如果获取成功，则执行 if 语句块内的代码。
+	if (AWarriorBaseGameMode* BaseGameMode = GetWorld() -> GetAuthGameMode<AWarriorBaseGameMode>())
+	{
+		//调用 BaseGameMode 的函数 GetCurrentGameDifficulty()
+		//根据不同的枚举值进入对应的 case 分支。
+		switch (BaseGameMode -> GetCurrentGameDifficulty())
+		{
+		case EWarriorGameDifficulty::Easy :
+			AbilityApplyLevel = 1;
+			break;
+		case EWarriorGameDifficulty::Normal :
+			AbilityApplyLevel = 2;
+			break;
+		case EWarriorGameDifficulty::Hard :
+			AbilityApplyLevel = 3;
+			break;
+		case EWarriorGameDifficulty::VeryHard :
+			AbilityApplyLevel = 4;
+			break;
+		default:
+			break;
+		}
+	}
+	
 	//软引用资源 CharacterStartUpData 异步加载，节省内存，避免一次性加载大量敌人数据
 	UAssetManager::GetStreamableManager().RequestAsyncLoad(
 		CharacterStartUpData.ToSoftObjectPath(),
 		FStreamableDelegate::CreateLambda(
-			[this]()
+			[this, AbilityApplyLevel]()
 			{
 				if(UDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.Get())
 				{
-					//加载完成后，将数据应用到 WarriorAbilitySystemComponent（属性/技能初始化）
-					LoadedData -> GiveToAbilitySystemComponent(WarriorAbilitySystemComponent);
+					//加载完成后，将数据应用到 WarriorAbilitySystemComponent（属性/技能初始化），并确定难度等级
+					LoadedData -> GiveToAbilitySystemComponent(WarriorAbilitySystemComponent, AbilityApplyLevel);
 
 					//Debug::Print(TEXT("Enemy Start Up Data Loaded"),FColor::Green);
 				}

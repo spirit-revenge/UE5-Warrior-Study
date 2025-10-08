@@ -99,7 +99,7 @@ void UGEExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectCustom
 	//从 Source 捕获的属性中获取攻击力
 	//EvaluateParams 包含攻击者/目标的 GameplayTag 信息，可用于条件计算
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetFWarriorDamageCapture().AttackPowerDef,EvaluateParams, SourceAttackPower);
-	// Debug::Print(TEXT("SourceAttackPower"), SourceAttackPower);
+	/*Debug::Print(TEXT("SourceAttackPower"), SourceAttackPower);*/
 	
 	float BaseDamage = 0.f;
 	int32 UsedLightAttackComboCount = 0;
@@ -113,7 +113,7 @@ void UGEExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectCustom
 		if (TagMagnitude.Key.MatchesTagExact(WarriorGameplayTags::Shared_SetByCaller_BaseDamage))
 		{
 			BaseDamage = TagMagnitude.Value;
-			// Debug::Print(TEXT("BaseDamage"), BaseDamage);
+			/*Debug::Print(TEXT("BaseDamage"), BaseDamage);*/
 		}
 
 		if (TagMagnitude.Key.MatchesTagExact(WarriorGameplayTags::Player_SetByCaller_AttackType_Light))
@@ -131,7 +131,7 @@ void UGEExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectCustom
 	float TargetDefensePower = 0.f;
 	//从目标的 DefensePower 属性获取防御力，用于伤害减免计算
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetFWarriorDamageCapture().DefensePowerDef,EvaluateParams,TargetDefensePower);
-	// Debug::Print(TEXT("TargetDefensePower"), TargetDefensePower);
+	/*Debug::Print(TEXT("TargetDefensePower"), TargetDefensePower);*/
 
 	//轻攻击加成：每次连击增加 5%
 	if (UsedLightAttackComboCount != 0)
@@ -156,7 +156,7 @@ void UGEExecCalc_DamageTaken::Execute_Implementation(const FGameplayEffectCustom
 
 	//最终伤害计算
 	const float FinalDamageDone = BaseDamage * SourceAttackPower / TargetDefensePower;
-	//Debug::Print(TEXT("FinalDamageDone"), FinalDamageDone);
+	/*Debug::Print(TEXT("FinalDamageDone"), FinalDamageDone);*/
 
 	//判断伤害大于零
 	if (FinalDamageDone > 0.f)

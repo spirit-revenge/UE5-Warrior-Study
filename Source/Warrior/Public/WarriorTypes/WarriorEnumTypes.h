@@ -38,3 +38,13 @@ enum class EWarriorCountDownActionOutput : uint8
 	Completed, //表示倒计时正常结束。
 	Cancelled  //表示倒计时被提前终止（用户或系统取消）。
 };
+
+//游戏难度等级
+UENUM(BlueprintType)
+enum class EWarriorGameDifficulty : uint8
+{
+	Easy,
+	Normal,
+	Hard,
+	VeryHard
+};

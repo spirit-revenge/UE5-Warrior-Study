@@ -18,6 +18,7 @@
 #include "DataAssets/StartUpData/DataAsset_HeroStartUpData.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameModes/WarriorBaseGameMode.h"
 #include "HAL/Platform.h"
 
 AWarriorHeroCharacter::AWarriorHeroCharacter()
@@ -99,8 +100,38 @@ void AWarriorHeroCharacter::PossessedBy(AController* NewController)
 		//软引用，运行时同步加载
 		if(UDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.LoadSynchronous())
 		{
-			//GiveToAbilitySystemComponent() 会把该角色需要的初始技能、被动 Buff、属性应用到 AbilitySystemComponent 中。
-			LoadedData->GiveToAbilitySystemComponent(WarriorAbilitySystemComponent);
+			//游戏难度的等级
+			int32 AbilityApplyLevel = 1;
+
+			//GetWorld()：返回当前对象所在的世界（UWorld）实例。
+			//GetAuthGameMode<T>()：仅在 服务器端 返回 GameMode 实例，客户端调用则会返回 nullptr。
+			//因此，这里是在服务器逻辑下获取 AWarriorBaseGameMode 实例，并将其指针赋值给 BaseGameMode。
+			//如果获取成功，则执行 if 语句块内的代码。
+			if (AWarriorBaseGameMode* BaseGameMode = GetWorld() -> GetAuthGameMode<AWarriorBaseGameMode>())
+			{
+				//调用 BaseGameMode 的函数 GetCurrentGameDifficulty()
+				//根据不同的枚举值进入对应的 case 分支。
+				switch (BaseGameMode -> GetCurrentGameDifficulty())
+				{
+				case EWarriorGameDifficulty::Easy :
+					AbilityApplyLevel = 4;
+					break;
+				case EWarriorGameDifficulty::Normal :
+					AbilityApplyLevel = 3;
+					break;
+				case EWarriorGameDifficulty::Hard :
+					AbilityApplyLevel = 2;
+					break;
+				case EWarriorGameDifficulty::VeryHard :
+					AbilityApplyLevel = 1;
+					break;
+				default:
+					break;
+				}
+			}
+			
+			//GiveToAbilitySystemComponent() 会把该角色需要的初始技能、被动 Buff、属性应用到 AbilitySystemComponent 中。并确定难度等级
+			LoadedData->GiveToAbilitySystemComponent(WarriorAbilitySystemComponent, AbilityApplyLevel);
 		}
 	}
 	
