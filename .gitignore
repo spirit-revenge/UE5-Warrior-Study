@@ -49,6 +49,3 @@ Session.vim
 
 # Visual Studio
 .vscode
-
-# Ignore built data assets
-./Content/**/*_BuiltData.uasset
