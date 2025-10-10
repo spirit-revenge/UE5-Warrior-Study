@@ -51,4 +51,4 @@ Session.vim
 .vscode
 
 # Ignore built data assets
-*_BuiltData.uasset
+./Content/**/*_BuiltData.uasset
