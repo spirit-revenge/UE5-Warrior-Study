@@ -66,6 +66,8 @@ class WARRIOR_API AWarriorSurvivalGameMode : public AWarriorBaseGameMode
 	GENERATED_BODY()
 
 protected:
+	//关卡加载完毕但 游戏世界（World）尚未开始运行 时进行初始化
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	//初始化 TargetPoints、读取 DataTable、设置第一波
 	virtual void BeginPlay() override;
 	//状态机逻辑

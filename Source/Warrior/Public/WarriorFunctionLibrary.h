@@ -7,6 +7,7 @@
 #include "WarriorTypes/WarriorEnumTypes.h"
 #include "WarriorFunctionLibrary.generated.h"
 
+class UWarriorGameInstance;
 class UWarriorAbilitySystemComponent;
 class UPawnCombatComponent;
 struct FScalableFloat;
@@ -102,4 +103,21 @@ public:
 		EWarriorCountDownActionInput CountDownInput,
 		UPARAM(DisplayName = "Output") EWarriorCountDownActionOutput& CountDownOutput,
 		FLatentActionInfo LatentInfo);
+
+	//WorldContext参数表示：由 BlueprintCallable 函数使用，用于指示哪个参数用于确定操作发生的世界。
+	UFUNCTION(BlueprintPure, Category = "Warrior|FunctionLibrary", meta = (WorldContext = "WorldContextObject"))
+	//从任意 蓝图或C++对象上下文（WorldContextObject） 中获取当前正在运行的 UWarriorGameInstance。
+	static  UWarriorGameInstance* GetWarriorGameInstance(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary", meta = (WorldContext = "WorldContextObject"))
+	//切换当前输入模式（只控制游戏、只控制UI等）。
+	static void ToggleInputMode(const UObject* WorldContextObject, EWarriorInputMode InInputMode);
+
+	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")
+	//保存当前选择的游戏难度到磁盘。
+	static void SaveCurrentGameDifficulty(EWarriorGameDifficulty InDifficultyToSave);
+
+	UFUNCTION(BlueprintCallable, Category = "Warrior|FunctionLibrary")
+	//尝试从存档读取之前保存的游戏难度。
+	static bool TryLoadSavedGameDifficulty(EWarriorGameDifficulty& OutSavedDifficulty);
 };

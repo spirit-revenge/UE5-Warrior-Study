@@ -5,11 +5,15 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GenericTeamAgentInterface.h"
+#include "WarriorDebugHelper.h"
 #include "WarriorGameplayTags.h"
 #include "AbilitySystem/WarriorAbilitySystemComponent.h"
 #include "Interfaces/PawnCombatInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "WarriorTypes/WarriorCountDownAction.h"
+#include "WarriorGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+#include "SaveGame/WarriorSaveGame.h"
 
 UWarriorAbilitySystemComponent* UWarriorFunctionLibrary::NativeGetWarriorASCFromActor(AActor* InActor)
 {
@@ -241,5 +245,118 @@ void UWarriorFunctionLibrary::CountDown(const UObject* WorldContextObject, float
 			FoundAction -> CancelAction();
 		}
 	}
+}
+
+UWarriorGameInstance* UWarriorFunctionLibrary::GetWarriorGameInstance(const UObject* WorldContextObject)
+{
+	//检查全局引擎指针是否存在，确保游戏引擎已经初始化。
+	if (GEngine)
+	{
+		//根据传入的上下文对象（如角色、控制器、HUD等），找到它所属于的世界（UWorld）。
+		if (UWorld* World = GEngine -> GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+		{
+			//从世界对象中获取并强制转换为你自定义的 UWarriorGameInstance 类型。
+			return World -> GetGameInstance<UWarriorGameInstance>();
+		}
+	}
+
+	//如果找不到，就返回 nullptr。
+	return nullptr;
+}
+
+void UWarriorFunctionLibrary::ToggleInputMode(const UObject* WorldContextObject, EWarriorInputMode InInputMode)
+{
+	//用来存储玩家控制器
+	APlayerController* PlayerController = nullptr;
+
+	//检查全局引擎指针是否存在，确保游戏引擎已经初始化。
+	if (GEngine)
+	{
+		//先从 WorldContextObject 找到世界，再取到玩家控制器。
+		//EGetWorldErrorMode -> GetWorldFromContextObject 使用的失败处理方式
+		//LogAndReturnNull -> 会引发运行时错误，但仍返回 nullptr，调用代码应当优雅地处理这种情况
+		if (UWorld* World = GEngine -> GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+		{
+			PlayerController = World -> GetFirstPlayerController();
+		}
+	}
+
+	//若没找到控制器，直接返回。
+	if (!PlayerController)
+	{
+		return;
+	}
+
+	//定义两个输入模式：
+	//FInputModeGameOnly: 仅游戏输入（键盘/鼠标控制角色）。
+	//FInputModeUIOnly: 仅UI输入（鼠标控制UI，不控制角色）。
+	FInputModeGameOnly GameOnlyMode;
+	FInputModeUIOnly UIOnlyMode;
+	//switch 根据传入枚举 EWarriorInputMode 切换：
+	//GameOnly：设定游戏输入，隐藏鼠标。
+	//UIOnly：设定UI输入，显示鼠标。
+	switch (InInputMode)
+	{
+	case EWarriorInputMode::GameOnly :
+		//设置玩家当前的输入模式为游戏输入
+		PlayerController -> SetInputMode(GameOnlyMode);
+		//隐藏鼠标
+		PlayerController -> bShowMouseCursor = false;
+		break;
+	case EWarriorInputMode::UIOnly :
+		//设置玩家当前的输入模式为UI输入
+		PlayerController -> SetInputMode(UIOnlyMode);
+		//显示鼠标
+		PlayerController -> bShowMouseCursor = true;
+		break;
+	default:
+		break;
+	}
+}
+
+void UWarriorFunctionLibrary::SaveCurrentGameDifficulty(EWarriorGameDifficulty InDifficultyToSave)
+{
+	//创建一个继承自 USaveGame 的对象（UWarriorSaveGame）。
+	USaveGame* SaveGameObject = UGameplayStatics::CreateSaveGameObject(UWarriorSaveGame::StaticClass());
+
+	//强转为自定义存档类。
+	if (UWarriorSaveGame* WarriorSaveGameObject = Cast<UWarriorSaveGame>(SaveGameObject))
+	{
+		//把要保存的难度 InDifficultyToSave 存入该对象。
+		WarriorSaveGameObject -> SavedCurrentGameDifficulty = InDifficultyToSave;
+
+		//调用 UGameplayStatics::SaveGameToSlot()
+		//保存到某个存档槽（槽名来自 WarriorGameplayTags 中的标签）。
+		const bool& bWasSaved = UGameplayStatics::SaveGameToSlot(WarriorSaveGameObject, WarriorGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0);
+
+		//调试输出“Saved” 或 “Not Saved”。
+		Debug::Print(bWasSaved ? "Saved" : "Not Saved");
+	}
+}
+
+bool UWarriorFunctionLibrary::TryLoadSavedGameDifficulty(EWarriorGameDifficulty& OutSavedDifficulty)
+{
+	//检查存档是否存在。
+	if (UGameplayStatics::DoesSaveGameExist(WarriorGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0))
+	{
+		//若存在 → 从指定槽加载。
+		USaveGame* SaveGameObject = UGameplayStatics::LoadGameFromSlot(WarriorGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(), 0);
+
+		//转换为 UWarriorSaveGame，读取其中的 SavedCurrentGameDifficulty。
+		if (UWarriorSaveGame* WarriorSaveGameObject = Cast<UWarriorSaveGame>(SaveGameObject))
+		{
+			//把读取到的难度写入传出参数 OutSavedDifficulty。
+			OutSavedDifficulty = WarriorSaveGameObject -> SavedCurrentGameDifficulty;
+
+			//调试输出加载成功信息
+			Debug::Print(TEXT("Load Game Successful"), FColor::Green);
+
+			//返回 true 表示加载成功，
+			return true;
+		}
+	}
+
+	//否则返回 false。
+	return false;
 }
 

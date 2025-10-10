@@ -4,10 +4,30 @@
 #include "GameModes/WarriorSurvivalGameMode.h"
 
 #include "NavigationSystem.h"
+#include "WarriorFunctionLibrary.h"
 #include "Characters/WarriorEnemyCharacter.h"
 #include "Engine/AssetManager.h"
 #include "Engine/TargetPoint.h"
 #include "Kismet/GameplayStatics.h"
+
+void AWarriorSurvivalGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+{
+	//确保父类 AGameModeBase 的初始化逻辑被执行。
+	Super::InitGame(MapName, Options, ErrorMessage);
+
+	//定义一个局部变量，用来存储从存档中读取的游戏难度。
+	EWarriorGameDifficulty SavedGameDifficulty;
+
+	//尝试从 存档文件 读取游戏难度
+	if (UWarriorFunctionLibrary::TryLoadSavedGameDifficulty(SavedGameDifficulty))
+	{
+		//如果成功 → 更新当前游戏模式中的 CurrentGameDifficulty 成员；
+		//如果失败 → 不修改，保持默认难度
+		CurrentGameDifficulty = SavedGameDifficulty;
+	}
+
+	
+}
 
 void AWarriorSurvivalGameMode::BeginPlay()
 {
